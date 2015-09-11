@@ -2,14 +2,27 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'mechanize'
+require 'aws-sdk'
+require 'pry'
 require 'cliqr'
+
+def get_cmd(cmd)
+  if Gem.win_platform?
+    @tmpbatchfile = Tempfile.new(['batch', '.ps1'])
+    @tmpbatchfile.write(cmd.gsub(';', "\r\n"))
+    @tmpbatchfile.close
+    "powershell #{@tmpbatchfile.path}"
+  else
+    "(#{cmd})"
+  end
+end
 
 def collect(top_dir_name, organization, git_base, api_key)
   #  root_url = 'https://app.founderbliss.com'
   root_url = 'http://local.encore.io:3000'
-  
+
   agent = Mechanize.new
-  headers = { 'X-User-Token' => api_key }
+  auth_headers = { 'X-User-Token' => api_key }
 
   dir_names = []
   top_dir_with_star = File.join(top_dir_name.to_s, '*')
@@ -21,7 +34,27 @@ def collect(top_dir_name, organization, git_base, api_key)
       full_name: "#{organization}/#{name}",
       git_url: File.join(git_base.to_s, name)
     }
-    repo_return = agent.post("#{root_url}/api/repo.json", params, headers)
+
+
+    log_fmt = '%H|%P|%ai|%aN|%aE|%s'
+    cmd = get_cmd("cd #{dir_name};git log --all --pretty=format:'#{log_fmt}'")
+    @lines = `#{cmd}`
+
+    repo_return = agent.post("#{root_url}/api/repo.json", params, auth_headers)
+    json_return = JSON.parse(repo_return.body)
+    repo_key = json_return['repo_key']
+
+    s3 = Aws::S3::Resource.new(region:'us-east-1')
+    obj = s3.bucket('founderbliss-temp-storage').object("#{organization}_#{name}_git.log")
+
+    # string data
+    obj.put(body: @lines)
+    log_url = obj.presigned_url(:get, expires_in: 86_400)
+
+    repo_return = agent.post(
+      "#{root_url}/api/gitlog",
+      { repo_key: repo_key, git_log_url: log_url },
+      auth_headers)
     dir_names << repo_return.body
   end
 
@@ -35,6 +68,11 @@ cli = Cliqr.interface do
 
   # main command handler
   handler do
+    aws_credentials = Aws::Credentials.new(
+      ENV['AWS_ACCESS_KEY_ID'] || aws_key.to_s,
+      ENV['AWS_SECRET_ACCESS_KEY'] || aws_secret.to_s)
+    Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
+
     collect(dir_name, organization, git_base, api_key) if dir_name?
     puts 'Please tell me directory name with the repositories' unless dir_name?
   end
@@ -53,6 +91,14 @@ cli = Cliqr.interface do
 
   option :dir_name do
     description 'Your directory name.'
+  end
+
+  option :aws_key do
+    description 'Your AWS S3 key (or taken from ENV[\'AWS_ACCESS_KEY_ID\'])'
+  end
+
+  option :aws_secret do
+    description 'Your AWS secret (or taken from ENV[\'AWS_SECRET_ACCESS_KEY\'])'
   end
 end
 
