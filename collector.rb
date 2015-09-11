@@ -17,9 +17,9 @@ def get_cmd(cmd)
   end
 end
 
-def collect(top_dir_name, organization, git_base, api_key)
+def collect(top_dir_name, organization, git_base, api_key, host)
   #  root_url = 'https://app.founderbliss.com'
-  root_url = 'http://local.encore.io:3000'
+  host = 'http://local.encore.io:3000' unless host?
 
   agent = Mechanize.new
   auth_headers = { 'X-User-Token' => api_key }
@@ -35,17 +35,17 @@ def collect(top_dir_name, organization, git_base, api_key)
       git_url: File.join(git_base.to_s, name)
     }
 
-
     log_fmt = '%H|%P|%ai|%aN|%aE|%s'
     cmd = get_cmd("cd #{dir_name};git log --all --pretty=format:'#{log_fmt}'")
     @lines = `#{cmd}`
 
-    repo_return = agent.post("#{root_url}/api/repo.json", params, auth_headers)
+    repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
     json_return = JSON.parse(repo_return.body)
     repo_key = json_return['repo_key']
 
-    s3 = Aws::S3::Resource.new(region:'us-east-1')
-    obj = s3.bucket('founderbliss-temp-storage').object("#{organization}_#{name}_git.log")
+    s3 = Aws::S3::Resource.new(region: 'us-east-1')
+    bucket = s3.bucket('founderbliss-temp-storage')
+    obj = bucket.object("#{organization}_#{name}_git.log")
 
     # string data
     obj.put(body: @lines)
@@ -73,7 +73,7 @@ cli = Cliqr.interface do
       ENV['AWS_SECRET_ACCESS_KEY'] || aws_secret.to_s)
     Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
 
-    collect(dir_name, organization, git_base, api_key) if dir_name?
+    collect(dir_name, organization, git_base, api_key, host) if dir_name?
     puts 'Please tell me directory name with the repositories' unless dir_name?
   end
 
@@ -99,6 +99,10 @@ cli = Cliqr.interface do
 
   option :aws_secret do
     description 'Your AWS secret (or taken from ENV[\'AWS_SECRET_ACCESS_KEY\'])'
+  end
+
+  option :host do
+    description 'The host for your bliss instance (e.g. http://localhost)'
   end
 end
 
