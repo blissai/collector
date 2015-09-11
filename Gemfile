@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+# ruby '2.2.2'
+gem 'mechanize'
+gem 'cached_web'
+gem 'cliqr'
+gem 'pry'
+gem 'pry-nav'
