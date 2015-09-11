@@ -3,6 +3,15 @@ Collector agent
 
 Command line interface to collect repository information and run linting tools over each commit
 
+Installing and Running
+--------
+````
+git clone git@github.com:founderbliss/collector.git
+rvm use 2.2.2
+bundle install
+./collector.rb --dir_name "/workspace/repolocations" --organization "[your org name]" --git_base "https://yourcompany.com/youroganiztion" --api_key '[your API key]'
+````
+
 Issues
 --------
 
