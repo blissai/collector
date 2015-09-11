@@ -9,13 +9,11 @@ require 'cliqr'
 require 'common'
 
 # Stats class for collecting git LOC and other stats
-class Collector < Cliqr.command
+class Stats < Cliqr.command
   include Common
 
   def execute(context)
     top_dir_name = context.option('dir_name').value
-    organization = context.option('organization').value
-    git_base = context.option('git_base').value
     api_key = context.option('api_key').value
     host = context.option('host').value
     aws_credentials = Aws::Credentials.new(
@@ -23,41 +21,13 @@ class Collector < Cliqr.command
       context.option('aws_secret').value)
     Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
 
-    agent = Mechanize.new
     auth_headers = { 'X-User-Token' => api_key }
 
     dir_names = []
 
     dir_list = get_directory_list(top_dir_name)
     dir_list.each do |dir_name|
-      name = dir_name.split('/').last
-      params = {
-        name: name,
-        full_name: "#{organization}/#{name}",
-        git_url: File.join(git_base.to_s, name)
-      }
-
-      log_fmt = '%H|%P|%ai|%aN|%aE|%s'
-      cmd = get_cmd("cd #{dir_name};git log --all --pretty=format:'#{log_fmt}'")
-      @lines = `#{cmd}`
-
-      repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
-      json_return = JSON.parse(repo_return.body)
-      repo_key = json_return['repo_key']
-
-      s3 = Aws::S3::Resource.new(region: 'us-east-1')
-      bucket = s3.bucket('founderbliss-temp-storage')
-      obj = bucket.object("#{organization}_#{name}_git.log")
-
-      # string data
-      obj.put(body: @lines)
-      log_url = obj.presigned_url(:get, expires_in: 86_400)
-
-      repo_return = agent.post(
-        "#{host}/api/gitlog",
-        { repo_key: repo_key, git_log_url: log_url },
-        auth_headers)
-      dir_names << repo_return.body
+      puts "Get todo list for repo at #{dir_name} #{host} with #{auth_headers}"
     end
 
     puts dir_names.join
@@ -65,23 +35,15 @@ class Collector < Cliqr.command
 end
 
 cli = Cliqr.interface do
-  name 'collector'
-  description 'Repo collector command line for Bliss.'
+  name 'stats'
+  description 'Repo stats for Bliss.'
   version '0.0.1' # optional; adds a version action to our simple command
 
   # main command handler
-  handler Collector
+  handler Stats
 
   option :api_key do
     description 'Your user API key from bliss (under settings)'
-  end
-
-  option :git_base do
-    description 'Base URL for git.'
-  end
-
-  option :organization do
-    description 'Your organization name.'
   end
 
   option :dir_name do
