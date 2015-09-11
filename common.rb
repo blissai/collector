@@ -15,4 +15,14 @@ module Common
     top_dir_with_star = File.join(top_dir_name.to_s, '*')
     Dir.glob(top_dir_with_star).select { |f| File.directory? f }
   end
+
+  def save_bliss_file(top_dir_name, repos)
+    File.open("#{top_dir_name}/.bliss.json", 'w') do |f|
+      f.write(repos.to_json)
+    end
+  end
+
+  def read_bliss_file(top_dir_name)
+    JSON.parse(File.open("#{top_dir_name}/.bliss.json", 'r').read)
+  end
 end

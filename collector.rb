@@ -26,7 +26,7 @@ class Collector < Cliqr.command
     agent = Mechanize.new
     auth_headers = { 'X-User-Token' => api_key }
 
-    dir_names = []
+    repos = {}
 
     dir_list = get_directory_list(top_dir_name)
     dir_list.each do |dir_name|
@@ -43,6 +43,7 @@ class Collector < Cliqr.command
 
       repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
       json_return = JSON.parse(repo_return.body)
+      repos[name] = json_return
       repo_key = json_return['repo_key']
 
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
@@ -53,14 +54,13 @@ class Collector < Cliqr.command
       obj.put(body: @lines)
       log_url = obj.presigned_url(:get, expires_in: 86_400)
 
-      repo_return = agent.post(
+      agent.post(
         "#{host}/api/gitlog",
         { repo_key: repo_key, git_log_url: log_url },
         auth_headers)
-      dir_names << repo_return.body
     end
 
-    puts dir_names.join
+    save_bliss_file(top_dir_name, repos)
   end
 end
 

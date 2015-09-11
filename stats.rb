@@ -23,11 +23,14 @@ class Stats < Cliqr.command
 
     auth_headers = { 'X-User-Token' => api_key }
 
+    repos = read_bliss_file(top_dir_name)
     dir_names = []
 
     dir_list = get_directory_list(top_dir_name)
     dir_list.each do |dir_name|
-      puts "Get todo list for repo at #{dir_name} #{host} with #{auth_headers}"
+      name = dir_name.split('/').last
+      repo = repos[name]
+      puts "Get todo list for repo at #{repo['repo_key']} #{host} with #{auth_headers}"
     end
 
     puts dir_names.join
