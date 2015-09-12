@@ -1,0 +1,10 @@
+# General purpose loader for required libraries
+require 'rubygems'
+require 'bundler/setup'
+require 'mechanize'
+require 'aws-sdk'
+require 'pry'
+require 'cliqr'
+require 'open3'
+require 'common'
+require 'gitbase'

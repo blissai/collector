@@ -1,16 +1,11 @@
 #!/usr/bin/env ruby
-$LOAD_PATH << '.'
-require 'rubygems'
-require 'bundler/setup'
-require 'mechanize'
-require 'aws-sdk'
-require 'pry'
-require 'cliqr'
-require 'common'
+$LOAD_PATH << 'lib'
+require 'bootstrap'
 
 # Stats class for collecting git LOC and other stats
 class Collector < Cliqr.command
   include Common
+  include Gitbase
 
   def execute(context)
     top_dir_name = context.option('dir_name').value
