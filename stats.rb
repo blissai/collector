@@ -51,9 +51,11 @@ class Stats < Cliqr.command
           end
         end
         checkout_commit(git_dir, commit)
+        language = sense_project_type(git_dir)
         total_cloc = `perl #{cloc_command} #{git_dir} #{cloc_options}`
         remove_open_source_files(git_dir)
         cloc = `perl #{cloc_command} #{git_dir} #{cloc_options}`
+        cloc_tests = `perl #{cloc_command} #{@cloc_test_dirs} #{cloc_options}`
 
         stat_payload = {
           repo_key: repo_key,
@@ -61,7 +63,8 @@ class Stats < Cliqr.command
           added_lines: added_lines,
           deleted_lines: deleted_lines,
           total_cloc: total_cloc,
-          cloc: cloc
+          cloc: cloc,
+          cloc_tests: cloc_tests
         }
 
         stats_response = agent.post(

@@ -89,7 +89,7 @@ module Gitbase
   end
 
   def cloc_options
-    '--yaml --quiet --skip-uniqueness --progress-rate=0'
+    "--yaml --quiet --skip-uniqueness --progress-rate=0 #{@cloc_options}"
   end
 
   def cloc_command
@@ -98,5 +98,89 @@ module Gitbase
     else
       "bin/cloc"
     end
+  end
+
+  def sense_project_type(git_dir)
+    language = ''
+    if Dir.entries(git_dir).find { |e| /\.sln$/ =~ e }
+      language = ".NET"
+    elsif File.exist?(File.join(git_dir,"config","boot.rb"))
+      language = 'rails'
+      @cloc_options = "--exclude-dir public,vendor,bin,coverage"
+      dirs = []
+      ['test', 'spec'].each do |test_dir|
+        if File.directory?(File.join(git_dir,test_dir))
+          dirs << File.join(git_dir,test_dir)
+        end
+      end
+      @cloc_test_dirs = dirs.join(" ") if dirs.present?
+    elsif File.exist?(File.join(git_dir,"Podfile"))
+      language = 'ios'
+      dirs = []
+      ['test', 'KIFTests'].each do |test_dir|
+        if File.directory?(File.join(git_dir, test_dir))
+          dirs << File.join(git_dir, test_dir)
+        end
+      end
+      @cloc_test_dirs = dirs.join(" ") if dirs.present?
+    elsif File.exist?(File.join(git_dir, "build.gradle"))
+      language = 'java'
+    elsif File.exist?(File.join(git_dir, "Godeps"))
+      language = 'go'
+      @cloc_test_dirs = "#{git_dir} --match-f=_test"
+    elsif File.directory?(File.join(git_dir, "wp-content"))
+      language = 'wordpress'
+      if `find wp-content -name 'sass'`.present? or `find wp-content -name 'less'`.present?
+        @cloc_options = "#{@cloc_options} --exclude-ext=css"
+      end
+      @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
+    elsif File.exist?(File.join(git_dir, "index.php"))
+      if `grep 'package Elgg' #{git_dir}/index.php`.present?
+        language = 'elgg'
+        source = File.open(File.join(git_dir, "version.php"), "r").read
+        if version_match =  /\$release = '([0-9.]+)'/.match(source)
+          @platform_cloc = PlatformCloc.where(name: 'elgg', version: version_match[1]).first
+        end
+      end
+      @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
+    elsif File.exist?(File.join(git_dir, "server.php"))
+      if `egrep 'package[ ]+Laravel' #{git_dir}/server.php`.present?
+        language = 'Laravel'
+        @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
+      end
+      elsif File.exist?(File.join(git_dir, "codeception.yml"))
+        language = 'php'
+        dirs = []
+        ['tests'].each do |test_dir|
+          if File.directory?(File.join(git_dir, test_dir))
+            dirs << File.join(git_dir, test_dir)
+          end
+        end
+        @cloc_test_dirs = dirs.join(" ") if dirs.present?
+    elsif File.exist?(File.join(git_dir, "manage.py"))
+      if `grep 'django' #{git_dir}/manage.py`.present?
+        language = 'django'
+        @cloc_test_dirs = "#{git_dir} --match-f='test[\s]*.py'"
+        @cloc_options = "--exclude-dir vendor"
+      else
+        language = 'Python'
+      end
+    elsif File.exist?(File.join(git_dir, "package.json"))
+      language = 'nodejs'
+      @cloc_options = "--exclude-dir vendor"
+      @cloc_options = "--exclude-dir vendor"
+    elsif `find #{git_dir} -iregex '.*\\(java\\)'`.present?
+      language = 'Java'
+    else
+      # Go with some pretty wide defaults for finding tests
+      dirs = []
+      ['test', 'spec'].each do |test_dir|
+        if File.directory?("#{git_dir}/#{test_dir}")
+          dirs << "#{git_dir}/#{test_dir}"
+        end
+      end
+      @cloc_test_dirs = dirs.join(" ") if dirs.present?
+    end
+    language
   end
 end

@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 # ruby '2.2.2'
+gem 'rails'
 gem 'mechanize'
 gem 'cached_web'
 gem 'cliqr'
