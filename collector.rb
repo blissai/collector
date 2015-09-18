@@ -26,6 +26,7 @@ class Collector < Cliqr.command
     dir_list = get_directory_list(top_dir_name)
     dir_list.each do |dir_name|
       name = dir_name.split('/').last
+      puts "Working on: #{name}"
       params = {
         name: name,
         full_name: "#{organization}/#{name}",
@@ -34,9 +35,11 @@ class Collector < Cliqr.command
 
       log_fmt = '%H|%P|%ai|%aN|%aE|%s'
       cmd = get_cmd("cd #{dir_name};git log --all --pretty=format:'#{log_fmt}'")
+      puts "\tRunning: #{cmd}"
       @lines = `#{cmd}`
 
       repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
+      puts "\tCreate repo: #{repo_return.body}"
       json_return = JSON.parse(repo_return.body)
       repos[name] = json_return
       repo_key = json_return['repo_key']

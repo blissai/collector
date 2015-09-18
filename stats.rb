@@ -40,6 +40,7 @@ class Stats < Cliqr.command
 
         stat_command = "git log --pretty=tformat: --numstat #{commit}"
         cmd = get_cmd("cd #{git_dir}; #{stat_command}")
+        puts "\t\t#{cmd}"
         added_lines = 0
         deleted_lines = 0
         @stats = `#{cmd}`
@@ -52,11 +53,20 @@ class Stats < Cliqr.command
         end
         checkout_commit(git_dir, commit)
         language = sense_project_type(git_dir)
-        total_cloc = `perl #{cloc_command} #{git_dir} #{cloc_options}`
+        cmd = "perl #{cloc_command} #{git_dir} #{cloc_options}"
+        puts "\t\t#{cmd}"
+        total_cloc = `#{cmd}`
         remove_open_source_files(git_dir)
-        cloc = `perl #{cloc_command} #{git_dir} #{cloc_options}`
-        cloc_tests = `perl #{cloc_command} #{@cloc_test_dirs} #{cloc_options}`
-
+        cmd = "perl #{cloc_command} #{git_dir} #{cloc_options}"
+        puts "\t\t#{cmd}"
+        cloc = `#{cmd}`
+        if @cloc_test_dirs.present?
+          cmd = "perl #{cloc_command} #{@cloc_test_dirs} #{cloc_options}"
+          puts "\t\t#{cmd}"
+          cloc_tests = `#{cmd}`
+        else
+          puts "\t\tNo known test pattern for cloc to run - skipped"
+        end
         stat_payload = {
           repo_key: repo_key,
           commit: commit,

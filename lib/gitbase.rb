@@ -89,7 +89,7 @@ module Gitbase
   end
 
   def cloc_options
-    "--yaml --quiet --skip-uniqueness --progress-rate=0 #{@cloc_options}"
+    "--yaml --quiet --skip-uniqueness --progress-rate=0"
   end
 
   def cloc_command
