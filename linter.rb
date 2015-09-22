@@ -35,6 +35,7 @@ class Linter < Cliqr.command
       json_return = JSON.parse(repo_return.body)
       linter = json_return['linter']
       ext = linter['output_format']
+      cd_first = linter['cd_first']
       quality_tool = linter['quality_tool']
       quality_command = linter ['quality_command']
       metrics = json_return['metrics']
@@ -53,10 +54,9 @@ class Linter < Cliqr.command
           file_name = File.join(dir_name, "#{quality_tool}.#{ext}")
 
           cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s)
-          cmd = cmd = get_cmd("cd #{git_dir};#{cmd}")
+          cmd = get_cmd("cd #{git_dir};#{cmd}") if cd_first
           puts "Running: #{cmd}"
           `#{cmd}`
-
 
           s3 = Aws::S3::Resource.new(region: 'us-east-1')
           bucket = s3.bucket('founderbliss-temp-storage')
