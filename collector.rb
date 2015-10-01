@@ -9,9 +9,9 @@ class MyCommandHandler < Cliqr.command
     if command == 'collector'
       Collector.new.execute(context)
     elsif command == 'stats'
-      puts 'run collector'
+      Stats.new.execute(context)
     elsif command == 'linter'
-      puts 'run collector'
+      Linter.new.execute(context)
     end
   end
 end
