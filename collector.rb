@@ -5,7 +5,7 @@ require 'bootstrap'
 # a custom command handler for base command
 class MyCommandHandler < Cliqr.command
   def execute(context)
-    command = context.option('run_command').value
+    command = context.option('command').value
     if command == 'collector'
       Collector.new.execute(context)
     elsif command == 'stats'
@@ -24,7 +24,7 @@ cli = Cliqr.interface do
   # main command handler
   handler MyCommandHandler
 
-  option :run_command do
+  option :command do
     description 'Command to run (collector, stats or linter)'
     default 'collector'
   end
