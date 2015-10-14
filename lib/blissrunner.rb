@@ -12,6 +12,8 @@ class BlissRunner
 
   # Global AWS Configuration
   def configure_aws(key, secret)
+    # do this once, and all s3 clients will now accept `:requester_pays` to all operations
+    Aws::S3::Client.add_plugin(RequesterPays)
     aws_credentials = Aws::Credentials.new(key, secret)
     Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
   end
@@ -25,7 +27,7 @@ class BlissRunner
     get_or_save_arg('What\'s your AWS Access Secret?', 'AWS_SECRET_ACCESS_KEY')
     get_or_save_arg('What is the hostname of your Bliss instance?', 'BLISS_HOST')
     get_or_save_arg('What is the name of your organization in git?', 'ORG_NAME')
-    File.open('../bliss-config.yml', 'w') { |f| f.write @config.to_yaml } # Store
+    File.open('bliss-config.yml', 'w') { |f| f.write @config.to_yaml } # Store
     puts 'Collector configured.'
     puts 'Configuring AWS...'
     configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])

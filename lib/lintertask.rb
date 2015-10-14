@@ -55,7 +55,7 @@ class LinterTask
             obj = bucket.object("#{organization}_#{name}_#{commit}.#{ext}")
 
             # string data
-            obj.put(body: File.open(file_name, 'r').read)
+            obj.put(body: File.open(file_name, 'r').read, requester_pays: true)
             lint_file_url = obj.presigned_url(:get, expires_in: 86_400)
 
             lint_payload = {

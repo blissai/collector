@@ -21,7 +21,7 @@ class CollectorTask
     bucket = s3.bucket('founderbliss-temp-storage')
     obj = bucket.object("#{organization}_#{name}_git.log")
     # string data
-    obj.put(body: lines)
+    obj.put(body: lines, requester_pays: true)
     obj.presigned_url(:get, expires_in: 86_400)
   end
 
