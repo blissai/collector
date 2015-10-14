@@ -1,4 +1,5 @@
 require 'rspec'
+require 'pry'
 
 ENV['RAILS_ENV'] ||= 'test'
 if ENV['RAILS_ENV'] == 'test'
@@ -12,5 +13,5 @@ if ENV['RAILS_ENV'] == 'test'
   end
 end
 
-Dir.glob("lib/bootstrap.rb").each(&method(:load)) 
+Dir.glob("lib/bootstrap.rb").each(&method(:load))
 Dir.glob("*.rb").each(&method(:load))

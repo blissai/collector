@@ -10,7 +10,7 @@ class LintInstaller
       linter_name = linter['name']
       install_command = linter['install_command']
       puts "Installing linter '#{linter_name}'..."
-      `cd #{@git_dir};#{install_command}`
+      `cd #{@git_dir};#{install_command} > /dev/null`
     end
   end
 end

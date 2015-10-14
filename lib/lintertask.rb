@@ -23,16 +23,15 @@ class LinterTask
       json_return = JSON.parse(repo_return.body)
 
       linters = json_return['linters']
-      lint_installer = LintInstaller.new(linters, git_dir)
-      lint_installer.install_dependencies
+      LintInstaller.new(linters, git_dir).install_dependencies
       linters.each do |linter|
         ext = linter['output_format']
         cd_first = linter['cd_first']
         quality_tool = linter['quality_tool']
         quality_command = linter ['quality_command']
         metrics = json_return['metrics']
-
-        puts "Working on repo: #{git_dir}"
+        puts "Working on repo: #{repo['full_name']}"
+        puts "No recent commits to work." if metrics.empty?
         metrics.each do |metric|
           Dir.mktmpdir do |dir_name|
             commit = metric['commit']
@@ -43,12 +42,14 @@ class LinterTask
             proj_filename = nil
 
             file_name = File.join(dir_name, "#{quality_tool}.#{ext}")
-
             cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s)
+            if cmd.include? 'json_path'
+              jshint_json_path = `cd #{git_dir};find . -path *jshint-json/json.js;`.gsub(/\n/,"").sub(".", git_dir)
+              cmd = cmd.gsub('json_path', jshint_json_path)
+            end
             cmd = get_cmd("cd #{git_dir};#{cmd}") if cd_first
-            puts "Running: #{cmd}"
+            puts "\tRunning linter: #{quality_tool}"
             `#{cmd}`
-
             s3 = Aws::S3::Resource.new(region: 'us-east-1')
             bucket = s3.bucket('founderbliss-temp-storage')
             obj = bucket.object("#{organization}_#{name}_#{commit}.#{ext}")
@@ -80,5 +81,6 @@ class LinterTask
     end
 
     puts dir_names.join
+    puts "Linter finished."
   end
 end

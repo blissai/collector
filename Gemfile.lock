@@ -273,6 +273,7 @@ DEPENDENCIES
   rails
   rspec
   rubocop
+  ruby-progressbar (~> 1.7.5)
   simplecov
 
 BUNDLED WITH

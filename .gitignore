@@ -88,3 +88,4 @@ collector-config.yaml
 dump.rdb
 .ruby-gemset
 .ruby-version
+bliss-config.yml

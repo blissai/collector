@@ -21,17 +21,17 @@ class StatsTask
         auth_headers)
       json_return = JSON.parse(repo_return.body)
 
-      puts "Working on repo: #{git_dir}"
+      puts "Working on: #{name}"
       json_return.each do |metric|
         commit = metric['commit']
-        puts "\tget stats for #{commit}"
+        puts "Getting stats for #{commit}..."
 
         stat_command = "git log --pretty=tformat: --numstat #{commit}"
         cmd = get_cmd("cd #{git_dir}; #{stat_command}")
-        puts "\t\t#{cmd}"
+        # puts "\t\t#{cmd}"
         added_lines = 0
         deleted_lines = 0
-        @stats = `#{cmd}`
+        @stats = %x{#{cmd}}
         @stats.split("\n").each do |stt|
           match = stt.match(/(\d+)\t(\d+)/)
           if match
@@ -42,18 +42,26 @@ class StatsTask
         checkout_commit(git_dir, commit)
         language = sense_project_type(git_dir)
         cmd = "perl #{cloc_command} #{git_dir} #{cloc_options}"
-        puts "\t\t#{cmd}"
+
+        puts "\tCounting total lines of code. This may take a while..."
         total_cloc = `#{cmd}`
+
+        # stdin, stdout, stderr = Open3.popen3(cmd)
+        # total_cloc = stdout.read
         remove_open_source_files(git_dir)
         cmd = "perl #{cloc_command} #{git_dir} #{cloc_options}"
-        puts "\t\t#{cmd}"
+
+        puts "\tCounting original lines of code. This may take a while..."
         cloc = `#{cmd}`
+        # stdin, stdout, stderr = Open3.popen3(cmd)
+        # cloc = stdout.read
+        puts "\tCounting lines of test code. This may take a while..."
         if @cloc_test_dirs.present?
           cmd = "perl #{cloc_command} #{@cloc_test_dirs} #{cloc_options}"
-          puts "\t\t#{cmd}"
+          # puts "\t\t#{cmd}"
           cloc_tests = `#{cmd}`
         else
-          puts "\t\tNo known test pattern for cloc to run - skipped"
+          puts "\tNo known test pattern for cloc to run - skipped"
         end
         stat_payload = {
           repo_key: repo_key,
@@ -64,13 +72,14 @@ class StatsTask
           cloc: cloc,
           cloc_tests: cloc_tests
         }
-
+        puts "\tPosting commit stats to Bliss..."
         stats_response = agent.post(
           "#{host}/api/commit/stats",
           stat_payload,
           auth_headers)
         stats_return = JSON.parse(stats_response.body)
-        puts "\t\tstats_response: #{stats_response.inspect}"
+        puts "\tSuccessfully saved stats for commit #{commit}."
+        # puts "\t\tstats_response: #{stats_response.inspect}"
       end
 
       # Go back to master at the end
@@ -78,5 +87,6 @@ class StatsTask
     end
 
     puts dir_names.join
+    puts "Stats finished."
   end
 end

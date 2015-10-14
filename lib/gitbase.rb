@@ -11,7 +11,7 @@ module Gitbase
     stdin, stdout, stderr = Open3.popen3(co_cmd)
     @ref = nil
     while (err = stderr.gets) do
-      puts err
+      puts err unless err.include? "Already on 'master'"
       @ref = err
       if err =~ /Your local changes to the following files would be overwritten by checkout/
         `#{remove_command} #{git_dir}/*`
@@ -29,6 +29,7 @@ module Gitbase
 
   def remove_open_source_files(git_dir)
     # Remove open source files
+    puts "\tRemoving open source files..."
     open_source_lines = nil
     if Gem.win_platform?
       egrep_cmd = "C:/Program Files (x86)/GnuWin32/bin/egrep.exe"
@@ -66,11 +67,11 @@ module Gitbase
     todo.uniq!
     todo.each do |cmd, file_name|
       #puts cmd
+      puts "Removing #{file_name}"
       if File.exist?(file_name)
         `#{get_cmd(cmd)}`
       end
     end
-    puts "Removed open source files"
   end
 
   def find_copyright(git_dir, is_demo=false)
@@ -89,7 +90,7 @@ module Gitbase
   end
 
   def cloc_options
-    "--yaml --quiet --skip-uniqueness --progress-rate=0"
+    "--yaml --quiet --skip-uniqueness --progress-rate 0"
   end
 
   def cloc_command
