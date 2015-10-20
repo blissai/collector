@@ -23,7 +23,6 @@ class LinterTask
       json_return = JSON.parse(repo_return.body)
 
       linters = json_return['linters']
-      LintInstaller.new(linters, git_dir).install_dependencies
       linters.each do |linter|
         ext = linter['output_format']
         cd_first = linter['cd_first']
@@ -43,26 +42,24 @@ class LinterTask
 
             file_name = File.join(dir_name, "#{quality_tool}.#{ext}")
             cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s)
-            if cmd.include? 'json_path'
-              jshint_json_path = `cd #{git_dir};find . -path *jshint-json/json.js;`.gsub(/\n/,"").sub(".", git_dir)
-              cmd = cmd.gsub('json_path', jshint_json_path)
-            end
             cmd = get_cmd("cd #{git_dir};#{cmd}") if cd_first
             puts "\tRunning linter: #{quality_tool}"
             `#{cmd}`
-            s3 = Aws::S3::Resource.new(region: 'us-east-1')
-            bucket = s3.bucket('founderbliss-temp-storage')
-            obj = bucket.object("#{organization}_#{name}_#{commit}.#{ext}")
-
-            # string data
-            obj.put(body: File.open(file_name, 'r').read, requester_pays: true)
-            lint_file_url = obj.presigned_url(:get, expires_in: 86_400)
+            key = "#{organization}_#{name}_#{commit}.#{ext}"
+            object_params = {
+              bucket: 'founderbliss-temp-storage',
+              key: key,
+              body: File.open(file_name, 'r').read,
+              requester_pays: true,
+              acl: 'bucket-owner-read'
+            }
+            $aws_client.put_object(object_params)
 
             lint_payload = {
               commit: commit,
               repo_key: repo_key,
               linter_id: linter['id'],
-              lint_file_location: lint_file_url }
+              lint_file_location: key }
 
             lint_response = agent.post(
                 "#{host}/api/commit/lint",

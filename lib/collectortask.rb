@@ -17,12 +17,21 @@ class CollectorTask
 
   def prepare_log(organization, name, lines)
     puts "\tSaving repo data to AWS Bucket..."
-    s3 = Aws::S3::Resource.new(region: 'us-east-1')
-    bucket = s3.bucket('founderbliss-temp-storage')
-    obj = bucket.object("#{organization}_#{name}_git.log")
+    # bucket = s3.bucket('founderbliss-temp-storage')
+    # obj = bucket.object("#{organization}_#{name}_git.log")
     # string data
-    obj.put(body: lines, requester_pays: true)
-    obj.presigned_url(:get, expires_in: 86_400)
+    # obj.put(body: lines, requester_pays: true, acl: 'public-read')
+    # obj.presigned_url(:get, expires_in: 86_400)
+    key = "#{organization}_#{name}_git.log"
+    object_params = {
+      bucket: 'founderbliss-temp-storage',
+      key: key,
+      body: lines,
+      requester_pays: true,
+      acl: 'bucket-owner-read'
+    }
+    $aws_client.put_object(object_params)
+    key
   end
 
   def execute(top_dir_name, organization, api_key, host)
@@ -37,10 +46,12 @@ class CollectorTask
       puts "Working on: #{name}"
       git_base_cmd = get_cmd("cd #{dir_name};git config --get remote.origin.url")
       git_base = `#{git_base_cmd}`.gsub(/\n/, '')
+      project_types = sense_project_type(dir_name)
       params = {
         name: name,
         full_name: "#{organization}/#{name}",
-        git_url: git_base
+        git_url: git_base,
+        languages: project_types
       }
 
       checkout_commit(dir_name, 'master')
@@ -58,11 +69,10 @@ class CollectorTask
       repos[name] = json_return
       repo_key = json_return['repo_key']
 
-      log_url = prepare_log(organization, name, lines)
-
+      s3_object_key = prepare_log(organization, name, lines)
       agent.post(
         "#{host}/api/gitlog",
-        { repo_key: repo_key, git_log_url: log_url },
+        { repo_key: repo_key, object_key: s3_object_key },
         auth_headers)
     end
 

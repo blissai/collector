@@ -102,11 +102,15 @@ module Gitbase
   end
 
   def sense_project_type(git_dir)
-    language = ''
+    # language = ''
+    languages = []
     if Dir.entries(git_dir).find { |e| /\.sln$/ =~ e }
-      language = ".NET"
-    elsif File.exist?(File.join(git_dir,"config","boot.rb"))
-      language = 'rails'
+      # language = ".NET"
+      languages.push(".NET")
+    end
+    if File.exist?(File.join(git_dir,"config","boot.rb"))
+      # language = 'rails'
+      languages.push("rails")
       @cloc_options = "--exclude-dir public,vendor,bin,coverage"
       dirs = []
       ['test', 'spec'].each do |test_dir|
@@ -115,8 +119,10 @@ module Gitbase
         end
       end
       @cloc_test_dirs = dirs.join(" ") if dirs.present?
-    elsif File.exist?(File.join(git_dir,"Podfile"))
-      language = 'ios'
+    end
+    if File.exist?(File.join(git_dir,"Podfile"))
+      # language = 'ios'
+      languages.push("ios")
       dirs = []
       ['test', 'KIFTests'].each do |test_dir|
         if File.directory?(File.join(git_dir, test_dir))
@@ -124,33 +130,44 @@ module Gitbase
         end
       end
       @cloc_test_dirs = dirs.join(" ") if dirs.present?
-    elsif File.exist?(File.join(git_dir, "build.gradle"))
-      language = 'java'
-    elsif File.exist?(File.join(git_dir, "Godeps"))
-      language = 'go'
+    end
+    if File.exist?(File.join(git_dir, "build.gradle"))
+      # language = 'java'
+      languages.push("java")
+    end
+    if File.exist?(File.join(git_dir, "Godeps"))
+      # language = 'go'
+      languages.push("go")
       @cloc_test_dirs = "#{git_dir} --match-f=_test"
-    elsif File.directory?(File.join(git_dir, "wp-content"))
-      language = 'wordpress'
-      if `find wp-content -name 'sass'`.present? or `find wp-content -name 'less'`.present?
+    end
+    if File.directory?(File.join(git_dir, "wp-content"))
+      # language = 'wordpress'
+      languages.push("wordpress")
+      if `find #{git_dir}/wp-content -name 'sass'`.present? or `find #{git_dir}/wp-content -name 'less'`.present?
         @cloc_options = "#{@cloc_options} --exclude-ext=css"
       end
       @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
-    elsif File.exist?(File.join(git_dir, "index.php"))
+    end
+    if File.exist?(File.join(git_dir, "index.php"))
       if `grep 'package Elgg' #{git_dir}/index.php`.present?
-        language = 'elgg'
+        # language = 'elgg'
+        languages.push("elgg")
         source = File.open(File.join(git_dir, "version.php"), "r").read
         if version_match =  /\$release = '([0-9.]+)'/.match(source)
           @platform_cloc = PlatformCloc.where(name: 'elgg', version: version_match[1]).first
         end
       end
       @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
-    elsif File.exist?(File.join(git_dir, "server.php"))
+    end
+    if File.exist?(File.join(git_dir, "server.php"))
       if `egrep 'package[ ]+Laravel' #{git_dir}/server.php`.present?
-        language = 'Laravel'
+        # language = 'Laravel'
+        languages.push("Laravel")
         @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
       end
       elsif File.exist?(File.join(git_dir, "codeception.yml"))
-        language = 'php'
+        # language = 'php'
+        languages.push("php")
         dirs = []
         ['tests'].each do |test_dir|
           if File.directory?(File.join(git_dir, test_dir))
@@ -158,21 +175,29 @@ module Gitbase
           end
         end
         @cloc_test_dirs = dirs.join(" ") if dirs.present?
-    elsif File.exist?(File.join(git_dir, "manage.py"))
+    end
+    if File.exist?(File.join(git_dir, "manage.py"))
       if `grep 'django' #{git_dir}/manage.py`.present?
-        language = 'django'
+        # language = 'django'
+        languages.push("django")
         @cloc_test_dirs = "#{git_dir} --match-f='test[\s]*.py'"
         @cloc_options = "--exclude-dir vendor"
       else
-        language = 'Python'
+        # language = 'Python'
+        languages.push("Python")
       end
-    elsif File.exist?(File.join(git_dir, "package.json"))
-      language = 'nodejs'
+    end
+    if File.exist?(File.join(git_dir, "package.json"))
+      # language = 'nodejs'
+      languages.push("nodejs")
       @cloc_options = "--exclude-dir vendor"
       @cloc_options = "--exclude-dir vendor"
-    elsif `find #{git_dir} -iregex '.*\\(java\\)'`.present?
-      language = 'Java'
-    else
+    end
+    if `find #{git_dir} -iregex '.*\\(java\\)'`.present?
+      # language = 'Java'
+      languages.push("Java")
+    end
+    if languages.empty?
       # Go with some pretty wide defaults for finding tests
       dirs = []
       ['test', 'spec'].each do |test_dir|
@@ -182,6 +207,6 @@ module Gitbase
       end
       @cloc_test_dirs = dirs.join(" ") if dirs.present?
     end
-    language
+    languages
   end
 end

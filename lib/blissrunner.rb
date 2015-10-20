@@ -15,7 +15,8 @@ class BlissRunner
     # do this once, and all s3 clients will now accept `:requester_pays` to all operations
     Aws::S3::Client.add_plugin(RequesterPays)
     aws_credentials = Aws::Credentials.new(key, secret)
-    Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
+    # Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
+    $aws_client = Aws::S3::Client.new(region: 'us-east-1', credentials: aws_credentials)
   end
 
   # Initialize state from config file or user input
