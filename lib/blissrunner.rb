@@ -12,6 +12,10 @@ class BlissRunner
 
   # Global AWS Configuration
   def configure_aws(key, secret)
+    # If Windows, use AWS's bundled ssl cert
+    if Gem.win_platform?
+      Aws.use_bundled_cert!
+    end
     # do this once, and all s3 clients will now accept `:requester_pays` to all operations
     Aws::S3::Client.add_plugin(RequesterPays)
     aws_credentials = Aws::Credentials.new(key, secret)

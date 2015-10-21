@@ -143,13 +143,13 @@ module Gitbase
     if File.directory?(File.join(git_dir, "wp-content"))
       # language = 'wordpress'
       languages.push("wordpress")
-      if `find #{git_dir}/wp-content -name 'sass'`.present? or `find #{git_dir}/wp-content -name 'less'`.present?
+      if !Dir.glob("sass").empty? or !Dir.glob("less").empty?
         @cloc_options = "#{@cloc_options} --exclude-ext=css"
       end
       @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
     end
     if File.exist?(File.join(git_dir, "index.php"))
-      if `grep 'package Elgg' #{git_dir}/index.php`.present?
+      if file_contains("#{git_dir}/index.php", "package Elgg")
         # language = 'elgg'
         languages.push("elgg")
         source = File.open(File.join(git_dir, "version.php"), "r").read
@@ -160,7 +160,7 @@ module Gitbase
       @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
     end
     if File.exist?(File.join(git_dir, "server.php"))
-      if `egrep 'package[ ]+Laravel' #{git_dir}/server.php`.present?
+      if file_contains("#{git_dir}/server.php", /package[ ]+Laravel/)
         # language = 'Laravel'
         languages.push("Laravel")
         @cloc_test_dirs = "#{git_dir} --match-f=Test.php"
@@ -177,7 +177,7 @@ module Gitbase
         @cloc_test_dirs = dirs.join(" ") if dirs.present?
     end
     if File.exist?(File.join(git_dir, "manage.py"))
-      if `grep 'django' #{git_dir}/manage.py`.present?
+      if file_contains("#{git_dir}/manage.py", "django")
         # language = 'django'
         languages.push("django")
         @cloc_test_dirs = "#{git_dir} --match-f='test[\s]*.py'"
@@ -191,9 +191,8 @@ module Gitbase
       # language = 'nodejs'
       languages.push("nodejs")
       @cloc_options = "--exclude-dir vendor"
-      @cloc_options = "--exclude-dir vendor"
     end
-    if `find #{git_dir} -iregex '.*\\(java\\)'`.present?
+    if !Dir.glob("*.java").empty?
       # language = 'Java'
       languages.push("Java")
     end
@@ -208,5 +207,13 @@ module Gitbase
       @cloc_test_dirs = dirs.join(" ") if dirs.present?
     end
     languages
+  end
+
+  def file_contains(file_path, search_string)
+    if search_string.is_a? Regexp
+      File.read(file_path) =~ search_string
+    else
+      File.read(file_path).include?(search_string)
+    end
   end
 end

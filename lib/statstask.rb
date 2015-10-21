@@ -15,7 +15,6 @@ class StatsTask
       name = git_dir.split('/').last
       repo = repos[name]
       repo_key = repo['repo_key']
-
       repo_return = agent.get(
         "#{host}/api/gitlog/stats_todo?repo_key=#{repo_key}",
         auth_headers)
