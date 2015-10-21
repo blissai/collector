@@ -1,21 +1,9 @@
 class LintInstaller
-  include Gitbase
 
-  def initialize(git_dirs)
+  def initialize(languages)
     puts "Installing linters..."
-    @git_dirs = git_dirs
-    @languages = determine_languages(git_dirs)
+    @languages = languages
     install_dependencies
-  end
-
-  #Determine all languages/frameworks
-  def determine_languages(git_dirs)
-    langs = []
-    git_dirs.each do |git_dir|
-      project_types = sense_project_type(git_dir)
-      langs = (langs << project_types).flatten!
-    end
-    langs
   end
 
   def php_dependecies
