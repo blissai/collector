@@ -47,9 +47,10 @@ class DependencyInstaller
 
     # Install required languages and package managers
     install_perl
-    install_npm
-    install_php
-    install_python
+    install_npm if ["JavaScript", "nodejs", "node"].any? { |lang| @languages.include? lang }
+    install_php if ["PHP", "php", "wordpress"].any? { |lang| @languages.include? lang }
+    # Also install Python and pip for C langs as is used to download linters
+    install_python if ["Python", "python", "django", "Objective-C", "Objective-C++"].any? { |lang| @languages.include? lang }
 
     # Install linters
     LintInstaller.new(@languages)
