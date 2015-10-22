@@ -38,6 +38,7 @@ class BlissRunner
     configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
     binding.pry
     puts 'AWS configured.'
+    DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
   def choose_command
