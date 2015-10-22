@@ -291,6 +291,3 @@ DEPENDENCIES
   rubocop
   ruby-progressbar (~> 1.7.5)
   simplecov
-
-BUNDLED WITH
-   1.10.6

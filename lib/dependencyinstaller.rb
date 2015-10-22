@@ -67,7 +67,7 @@ class DependencyInstaller
     unless command_exists? "node -v"
       puts "Installing node and npm..."
       if windows?
-        command = 'choco install nodejs.install'
+        command = 'choco install nodejs'
       else
         command = "#{pkgmgr} install nodejs npm"
         command += ' --enablerepo=epel' if pkgmgr.include? 'yum'
@@ -110,12 +110,16 @@ class DependencyInstaller
   #
 
   def command_exists?(command)
-    begin
-      `#{command}`
-      true
-    rescue
-      puts "#{command.split(' ')[0]} not detected..."
-      false
+    if windows?
+      !`#{command}`.nil?
+    else
+      begin
+        `#{command}`
+        true
+      rescue Exception => e
+        puts "#{command.split(' ')[0]} not detected..."
+        false
+      end
     end
   end
 

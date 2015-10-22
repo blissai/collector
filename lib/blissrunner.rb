@@ -8,6 +8,7 @@ class BlissRunner
       @config = {}
     end
     get_config
+    DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
   # Global AWS Configuration
@@ -36,9 +37,7 @@ class BlissRunner
     puts 'Collector configured.'
     puts 'Configuring AWS...'
     configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
-    binding.pry
     puts 'AWS configured.'
-    DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
   def choose_command
