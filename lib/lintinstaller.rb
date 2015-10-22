@@ -3,45 +3,54 @@ class LintInstaller
   def initialize(languages)
     puts "Installing linters..."
     @languages = languages
+  end
+
+  def run
     install_dependencies
   end
 
   def php_dependecies
-    puts "Installing PHP Codesniffer..."
-    # install php codesniffer
-    `composer global require "squizlabs/php_codesniffer=*"`
+    unless `composer global show -i`.include? 'squizlabgs/php_codesniffer'
+      puts "Installing PHP Codesniffer..."
+      # install php codesniffer
+      `composer global require "squizlabs/php_codesniffer=*"`
+    end
   end
 
   def wordpress_dependencies
-    puts "Installing Wordpress Codesniffer..."
-    # install wordpress codesniffer standards
-    if Gem.win_platform?
-    else
-      # install php codesniffer if not exists
-      `if [[ ! -e phpcs ]]; then composer global require "squizlabs/php_codesniffer=*"; fi;`
-      # install wpcs if not exists
-      `if [[ ! -e ~/wpcs ]]; then git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git ~/wpcs; fi`
+    # install php codesniffer if not exists
+    php_dependecies
+    # install wpcs if not exists
+    if !File.directory?(File.expand_path("~/wpcs"))
+      puts "Installing Wordpress Codesniffer..."
+      `git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git ~/wpcs`
       # point php codesniffer to wpcs
       composer_home = `composer config --global home`.gsub(/\n/, "")
-      `#{composer_home}/vendor/bin/phpcs --config-set installed_paths ~/wpcs`
+      `#{composer_home}/vendor/bin/phpcs --config-set installed_paths #{File.expand_path("~/wpcs")}`
     end
   end
 
   def js_dependencies
-    puts "Installing jsHint..."
-    `npm install -g jshint`
-    `npm install --save-dev jshint-json`
+    if `npm list -g jshint`.include? "empty"
+      puts "Installing jsHint..."
+      `npm install -g jshint`
+      `npm install --save-dev jshint-json`
+    end
   end
 
   def python_dependencies
-    puts "Installing Django and Prospector..."
-    `pip install django`
-    `pip install prospector`
+    if !`pip freeze`.include?('django') || !`pip freeze`.include?('prospector')
+      puts "Installing Django and Prospector..."
+      `pip install django`
+      `pip install prospector`
+    end
   end
 
   def c_dependencies
-    puts "Installing Lizard..."
-    `pip install lizard`
+    if !`pip freeze`.include? 'lizard'
+      puts "Installing Lizard..."
+      `pip install lizard`
+    end
   end
 
   def ruby_dependencies
@@ -50,10 +59,9 @@ class LintInstaller
   end
 
   def cpd_dependencies
-    puts "Installing pmd..."
-    if Gem.win_platform?
-    else
-      `if [[ ! -e ~/pmd ]]; then git clone https://github.com/iconnor/pmd.git ~/pmd; fi`
+    if !File.directory?(File.expand_path("~/pmd"))
+      puts "Installing pmd..."
+      `git clone https://github.com/iconnor/pmd.git ~/pmd`
     end
   end
 

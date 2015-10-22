@@ -4,7 +4,7 @@ class DependencyInstaller
 
   def initialize(top_lvl_dir)
     @top_lvl_dir = top_lvl_dir
-
+    @dirs_list = get_directory_list(@top_lvl_dir)
     # Determines languages of all the projects
     @languages = determine_languages(@top_lvl_dir)
 
@@ -43,8 +43,6 @@ class DependencyInstaller
 
   def run
     puts 'Installing dependencies...'
-    dirs_list = get_directory_list(@top_lvl_dir)
-
     # Install required languages and package managers
     install_perl
     install_npm if ["JavaScript", "nodejs", "node"].any? { |lang| @languages.include? lang }
@@ -53,7 +51,7 @@ class DependencyInstaller
     install_python if ["Python", "python", "django", "Objective-C", "Objective-C++"].any? { |lang| @languages.include? lang }
 
     # Install linters
-    LintInstaller.new(@languages)
+    LintInstaller.new(@languages).run
   end
 
   # Installs the Chocolatey Package Manager
@@ -124,7 +122,7 @@ class DependencyInstaller
   # Determine languages/frameworks used in the repositories
   def determine_languages(git_dirs)
     langs = []
-    git_dirs.each do |git_dir|
+    @dirs_list.each do |git_dir|
       project_types = sense_project_type(git_dir)
       langs = (langs << project_types).flatten!
     end

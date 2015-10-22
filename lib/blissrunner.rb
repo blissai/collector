@@ -36,6 +36,7 @@ class BlissRunner
     puts 'Collector configured.'
     puts 'Configuring AWS...'
     configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
+    binding.pry
     puts 'AWS configured.'
   end
 
