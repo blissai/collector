@@ -11,4 +11,6 @@ choco install vcredist2012
 choco install php
 $env:Path = "$($env:Path);C:\tools\php"
 choco install python
+gem install bundler
+gem install rake
 bundle install
