@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 puts 'Installing Bliss Collector... please wait'
 puts 'Installing dependencies...'
 `gem install bundler`
