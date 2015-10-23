@@ -1,2 +1,2 @@
 #!/usr/bin/env ruby
-`ruby blisscollector.rb`
+`start powershell "cd C:/tools/blisscollector; ruby blisscollector.rb"`
