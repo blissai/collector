@@ -1,4 +1,4 @@
-#Allow global confirmaiton on install
+#Allow global confirmation on install
 choco feature enable -n=allowGlobalConfirmation
 #Install ruby and add to path
 choco install ruby
@@ -11,3 +11,4 @@ choco install vcredist2012
 choco install php
 $env:Path = "$($env:Path);C:\tools\php"
 choco install python
+bundle install
