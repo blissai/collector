@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 puts 'Installing Bliss Collector... please wait'
 puts 'Installing dependencies...'
-`gem install bundler`
-`bundle install`
-`@powershell Set-ExecutionPolicy RemoteSigned; powershell.exe installscripts/setup.ps1`
 `git clone https://github.com/founderbliss/collector.git C:/tools/blisscollector`
-`@powershell powershell.exe installscripts/shortcut.ps1`
+`@powershell Set-ExecutionPolicy RemoteSigned; powershell.exe C:/tools/blisscollector/installscripts/setup.ps1`
+puts `cd C:/tools/blisscollector; gem install bundler; gem install rake`
+puts `cd C:/tools/blisscollector; bundle install`
+puts "Adding shortcut to desktop."
+`@powershell powershell.exe C:/tools/blisscollector/installscripts/shortcut.ps1`
 puts 'Installation complete.'
