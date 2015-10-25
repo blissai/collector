@@ -10,8 +10,8 @@ choco install ruby;
 $env:path = $env:Path + ";C:\tools\ruby21\bin";
 Write-Host "Installing Ruby Devkit...";
 choco install ruby2.devkit;
-$oldPath=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path;
-Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value "$($oldPath);C:\tools\DevKit2\bin";
+$pathOne=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path + ";C:\tools\DevKit2\bin";
+Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value $pathOne;
 #$env:Path = "$($env:Path);C:\tools\DevKit2\bin"
 Write-Host "Installing Perl...";
 choco install strawberryperl;
@@ -20,8 +20,8 @@ choco install nodejs;
 choco install vcredist2012;
 Write-Host "Installing PHP...";
 choco install php;
-$oldPathTwo=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path;
-Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value "$($oldPathTwo);C:\tools\php";
+$pathTwo=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path + ";C:\tools\php";
+Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value $pathTwo;
 #$env:Path = "$($env:Path);C:\tools\php"
 Write-Host "Installing Python...";
 choco install python;
