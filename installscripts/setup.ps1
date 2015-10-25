@@ -21,6 +21,9 @@ choco install nodejs
 choco install vcredist2012
 Write-Host "Installing PHP..."
 choco install php
+$oldPath=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path
+$newPath=$oldPath+';C:\tools\php'
+Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value $newPath
 $env:Path = "$($env:Path);C:\tools\php"
 Write-Host "Installing Python..."
 choco install python
