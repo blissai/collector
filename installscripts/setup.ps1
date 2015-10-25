@@ -11,7 +11,7 @@ $env:path = "$($env:Path);C:\tools\ruby21\bin";
 Write-Host "Installing Ruby Devkit..."
 choco install ruby2.devkit
 $oldPath=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path
-$newPath=$oldPath+';C:\tools\DevKit2\bin'
+$newPath = "$($oldPath);C:\tools\DevKit2\bin"
 Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value $newPath
 $env:Path = "$($env:Path);C:\tools\DevKit2\bin"
 Write-Host "Installing Perl..."
@@ -22,7 +22,7 @@ choco install vcredist2012
 Write-Host "Installing PHP..."
 choco install php
 $oldPath=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path
-$newPath=$oldPath+';C:\tools\php'
+$newPath= "$($oldPath);C:\tools\php"
 Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value $newPath
 $env:Path = "$($env:Path);C:\tools\php"
 Write-Host "Installing Python..."
