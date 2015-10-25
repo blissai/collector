@@ -7,12 +7,12 @@ choco feature enable -n=allowGlobalConfirmation;
 #Install ruby and add to path
 Write-Host "Installing Ruby...";
 choco install ruby;
-$env:path = $env:Path + ";C:\tools\ruby21\bin";
+$env:Path = "$($env:Path);C:\tools\ruby21\bin"
 Write-Host "Installing Ruby Devkit...";
 choco install ruby2.devkit;
 $pathOne=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path + ";C:\tools\DevKit2\bin";
 Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value $pathOne;
-#$env:Path = "$($env:Path);C:\tools\DevKit2\bin"
+$env:Path = "$($env:Path);C:\tools\DevKit2\bin"
 Write-Host "Installing Perl...";
 choco install strawberryperl;
 Write-Host "Installing nodeJS...";
