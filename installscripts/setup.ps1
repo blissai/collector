@@ -13,6 +13,7 @@ choco install ruby2.devkit
 $oldPath=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).Path
 $newPath=$oldPath+';C:\tools\DevKit2\bin'
 Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH –Value $newPath
+$env:Path = "$($env:Path);C:\tools\DevKit2\bin"
 Write-Host "Installing Perl..."
 choco install strawberryperl
 Write-Host "Installing nodeJS..."
