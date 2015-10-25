@@ -61,7 +61,7 @@ class LintInstaller
   def cpd_dependencies
     if !File.directory?(File.expand_path("~/pmd"))
       puts "Installing pmd..."
-      `git clone https://github.com/iconnor/pmd.git ~/pmd`
+      `git clone https://github.com/iconnor/pmd.git #{File.expand_path("~/pmd")}`
     end
   end
 
