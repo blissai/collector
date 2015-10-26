@@ -12,7 +12,7 @@ class LintInstaller
   def php_dependecies
     if !File.directory?(File.expand_path("~/phpcs"))
       puts "Installing PHP Codesniffer..."
-      `git clone https://github.com/squizlabs/PHP_CodeSniffer.git ~/phpcs`
+      `git clone https://github.com/squizlabs/PHP_CodeSniffer.git #{File.expand_path("~/phpcs")}`
       # install php codesniffer
     end
   end
@@ -23,7 +23,7 @@ class LintInstaller
     # install wpcs if not exists
     if !File.directory?(File.expand_path("~/wpcs"))
       puts "Installing Wordpress Codesniffer..."
-      `git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git ~/wpcs`
+      `git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git #{File.expand_path("~/wpcs")}`
       # point php codesniffer to wpcs
       `#{File.expand_path("~/phpcs")} --config-set installed_paths #{File.expand_path("~/wpcs")}`
     end
