@@ -52,9 +52,13 @@ powershell.exe setup.ps1
 ````
 This will begin the installation process.
 
+Detailed instructions on how to install PHP in Windows can be found here:
+
+http://www.sitepoint.com/how-to-install-php-on-windows/
+
 You can also use Chocolatey to install PHP, however you will need to add 'C:\tools\php' to your path as this is not done automatically. Instructions on altering your path can be found here:
 
-
+http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-path
 
 Unix
 --------
