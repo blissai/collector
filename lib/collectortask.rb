@@ -54,8 +54,6 @@ class CollectorTask
         git_url: git_base,
         languages: project_types
       }
-      binding.pry
-
       checkout_commit(dir_name, 'master')
       cmd = get_cmd("cd #{dir_name};git pull")
       puts "\tPulling repository at #{git_base}"
@@ -65,6 +63,7 @@ class CollectorTask
       puts "\tFound #{lines.split("\n").count} commits in total..."
       puts "\tSaving repository details to database..."
       repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
+      binding.pry
       repo_details = JSON.parse(repo_return.body)
       puts "\tCreated repo ##{repo_details['id']} - #{repo_details['full_name']}"
       json_return = JSON.parse(repo_return.body)
