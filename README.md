@@ -1,15 +1,62 @@
 Collector agent
 --------
+The Bliss Collector is a Ruby command-line application to collect repository data to send to Bliss's servers for dashboarding.
 
-Command line interface to collect repository information and run linting tools over each commit
-
-Installing and Running
+Information Required
 --------
+You will need the following information before using Bliss's Collector:
+*  Your Bliss API Key - You can find this by logging into bliss.ai, clicking on the Settings wheel, scrolling the the bottom and clicking "Show" on the API Key bar
+*  The path of the directory where all of your repositories are located
+*  Your AWS Key and AWS Secret - These are used to upload linting files to our AWS Buckets
+*  Your git organization name
+
+Setup
+--------
+Bliss's Collector has specific requirements that need to be met before it will work on all project types.
+
+The following is a list of dependencies that are required to support:
+*  Ruby 2.x
+*  Ruby DevKit
+*  Perl
+*  Python
+*  NodeJS and Node Package Manager
+*  php
+*  Git installation
+
+In addition, a number of linting tools are required:
+*  JSHint (for JavaScript repositories)
+*  Prospector (for Python/Django repositories)
+*  ReSharper and InspectCode (for .NET repositories)
+*  pmd (for Java repositories)
+*  cpd - included with pmd (for all repositories)
+*  lizard (for Objective-C repositories)
+*  metric_fu (for ruby repositories)
+*  PHP Codesniffer (for php repositories)
+*  Wordpress Codesniffer (for Wordpress repositories)
+*  csslint (for css file linting)
+
+Windows
+--------
+The easiest way to install Ruby and Ruby DevKit on Windows is by using RailsInstaller, which can be found at:
+  https://s3.amazonaws.com/railsinstaller/Windows/railsinstaller-3.1.0.exe
+This will include Ruby 2, RubyGems and RubyDevKit.
+
+The other dependencies are available using Chocolatey Nuget, a package manager for Windows.
+There is a script called setup.sh1 in the 'installscripts' folder that will manage the installation of Chocolatey Nuget, Perl, Python, NodeJS and NPM.
+
+In order to run this script, open up a Powershell window, cd into the 'installscripts' directory, and type:
 ````
-git clone git@github.com:founderbliss/collector.git
-rvm use 2.2.2
-bundle install
-./collector.rb --dir_name "/workspace/repolocations" --organization "[your org name]" --git_base "https://yourcompany.com/youroganiztion" --api_key '[your API key]'
+powershell.exe setup.ps1
+````
+This will begin the installation process.
+
+Unix
+--------
+Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
+There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
+In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
+````
+./setup.sh
 ````
 
 Issues
