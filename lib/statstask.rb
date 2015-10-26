@@ -5,6 +5,7 @@ class StatsTask
 
   def execute(top_dir_name, api_key, host)
     agent = Mechanize.new
+    agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     auth_headers = { 'X-User-Token' => api_key }
 
     repos = read_bliss_file(top_dir_name)
