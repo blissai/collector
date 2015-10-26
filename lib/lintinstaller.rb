@@ -10,10 +10,10 @@ class LintInstaller
   end
 
   def php_dependecies
-    unless `composer global show -i`.include? 'squizlabgs/php_codesniffer'
+    if !File.directory?(File.expand_path("~/phpcs"))
       puts "Installing PHP Codesniffer..."
+      `git clone https://github.com/squizlabs/PHP_CodeSniffer.git ~/phpcs`
       # install php codesniffer
-      `composer global require "squizlabs/php_codesniffer=*"`
     end
   end
 
@@ -25,8 +25,7 @@ class LintInstaller
       puts "Installing Wordpress Codesniffer..."
       `git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git ~/wpcs`
       # point php codesniffer to wpcs
-      composer_home = `composer config --global home`.gsub(/\n/, "")
-      `#{composer_home}/vendor/bin/phpcs --config-set installed_paths #{File.expand_path("~/wpcs")}`
+      `#{File.expand_path("~/phpcs")} --config-set installed_paths #{File.expand_path("~/wpcs")}`
     end
   end
 
