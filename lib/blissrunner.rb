@@ -79,10 +79,11 @@ class BlissRunner
   # A function to set up a scheduled job to run 'automate' every x number of minutes
   def schedule_job(every_x_minutes)
     if Gem.win_platform?
+
     else
       # Create a shell script that runs blissauto
       cwd = `pwd`.gsub(/\n/, "")
-      cron_command = "ruby #{cwd}/blissauto.rb"
+      cron_command = "cd  #{cwd}; ruby blissauto.rb"
       file_name = cwd + "/cron_script.sh"
       File.open(file_name, 'w') {|file|
         file.write(cron_command)
@@ -90,11 +91,10 @@ class BlissRunner
 
       # Create a file for Cron
       cron_entry = "*/#{every_x_minutes} * * * * #{cwd}/cron_script.sh"
-      File.open('/etc/cron.d/', 'w') {|file|
+      File.open('/etc/cron.d/bliss', 'w') {|file|
         file.write(cron_entry)
       }
       puts 'Job scheduled successfully.'
-      # `crontab -l | { cat; echo "0 0 0 0 0 some entry"; } | crontab -`
     end
   end
 
