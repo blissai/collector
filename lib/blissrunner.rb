@@ -41,7 +41,7 @@ class BlissRunner
   end
 
   def choose_command
-    puts 'Which command would you like to run? ((C)ollector, (L)int or (S)tats or (Q)uit)'
+    puts 'Which command would you like to run? ((C)ollector, (S)tats, (L)inter or (Q)uit) or type "T" to setup scheduling.'
     command = gets.chomp.upcase
     if command == 'C'
       puts 'Running Collector'
@@ -52,10 +52,50 @@ class BlissRunner
     elsif command == 'S'
       puts 'Running Stats'
       StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
+    elsif command == 'T'
+      puts 'How often, in minutes, would you like to automatically run Bliss Collector?'
+      minutes = gets.chomp
+      if !is_i?(minutes)
+        puts 'This is not a valid integer. Please try again with a positive integer.'
+      else
+        schedule_job(minutes)
+      end
     else
       puts 'Not a valid option. Please choose Collector, Lint, Stats or Quit.' unless command == 'Q'
     end
     choose_command unless command.eql? 'Q'
+  end
+
+  # A function that automates the above three functions for a scheduled job
+  def automate
+    puts 'Running Collector'
+    CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
+    puts 'Running Stats'
+    StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
+    puts 'Running Linter'
+    LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
+  end
+
+  # A function to set up a scheduled job to run 'automate' every x number of minutes
+  def schedule_job(every_x_minutes)
+    if Gem.win_platform?
+    else
+      # Create a shell script that runs blissauto
+      cwd = `pwd`.gsub(/\n/, "")
+      cron_command = "ruby #{cwd}/blissauto.rb"
+      file_name = cwd + "/cron_script.sh"
+      File.open(file_name, 'w') {|file|
+        file.write(cron_command)
+      }
+
+      # Create a file for Cron
+      cron_entry = "*/#{every_x_minutes} * * * * #{cwd}/cron_script.sh"
+      File.open('/etc/cron.d/', 'w') {|file|
+        file.write(cron_entry)
+      }
+      puts 'Job scheduled successfully.'
+      # `crontab -l | { cat; echo "0 0 0 0 0 some entry"; } | crontab -`
+    end
   end
 
   private
@@ -68,5 +108,9 @@ class BlissRunner
       arg = gets.chomp
       @config[env_name] = arg
     end
+  end
+
+  def is_i? string_to_check
+    !!(string_to_check =~ /\A[-+]?[0-9]+\z/)
   end
 end

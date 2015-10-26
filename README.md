@@ -1,6 +1,6 @@
 Collector agent
 --------
-The Bliss Collector is a Ruby command-line application to collect repository data to send to Bliss's servers for dashboarding.
+The Bliss Collector is a Ruby command-line application to collect repository and commit data for Bliss.ai.
 
 Information Required
 --------
@@ -38,7 +38,9 @@ In addition, a number of linting tools are required:
 Windows
 --------
 The easiest way to install Ruby and Ruby DevKit on Windows is by using RailsInstaller, which can be found at:
+
   https://s3.amazonaws.com/railsinstaller/Windows/railsinstaller-3.1.0.exe
+
 This will include Ruby 2, RubyGems and RubyDevKit.
 
 The other dependencies are available using Chocolatey Nuget, a package manager for Windows.
@@ -59,10 +61,34 @@ In order to run this script, open up a Bash Terminal, cd into the 'installscript
 ./setup.sh
 ````
 
+Setup
+--------
+You can run the Bliss Collector CLI tool by running blisscollecto.rb using the Ruby command in your terminal:
+`````
+ruby blisscollector.rb
+`````
+The first time you do this, you will be prompted for the information set out in the 'Information Required' section above.
+This information will be stored in a YAML file, bliss-config.yml, in the main folder for future use. You can remove any of these entries to be prompted again, or you can updated the information stored in the config file.
+
+The commands available through the CLI tool are:
+*  Collector (C) - this command will collect metadata about your repositories and post them to Bliss
+*  Stats (S) - this command will log all of your commits with Bliss, and calculate data such as Lines of Code, Test Lines of Code etc.
+*  Linter (L) - this command will run linters over all of your outstanding commits and send the linting data to Bliss for analysis
+
+These should be run in the following order:
+
+Collector -> Stats -> Linter
+
+You can also schedule a chron job to run the above tasks at a specified interval, by typing 't', and then inputing an integer that represents the the interval in minutes.
+
+Typing '5' will run the job at 10:00, 10:05, 10:10 and so on.
+
 Issues
 --------
 
-Issues are reported via github "Issues":https://github.com/founderbliss/collector/issues
+Issues are reported via github "Issues":
+
+https://github.com/founderbliss/collector/issues
 
 To start working on an issue, take one that you can handle from the issue list. Assign it to yourself and start to work on it. Please close issues before taking new ones.
 
@@ -84,7 +110,8 @@ Authors
 
 Copyright (c) 2015 by Bliss.ai Inc
 
-h4. Contact
+Contact
+--------
 
 ProjectLounge.com Inc
 Stonham, MA, USA
