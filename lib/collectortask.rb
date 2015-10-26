@@ -16,7 +16,7 @@ class CollectorTask
   end
 
   def prepare_log(organization, name, lines)
-    puts "\tSaving repo data to AWS Bucket..."
+    puts "\tSaving repo data to AWS Bucket...".green
     # bucket = s3.bucket('founderbliss-temp-storage')
     # obj = bucket.object("#{organization}_#{name}_git.log")
     # string data
@@ -41,10 +41,10 @@ class CollectorTask
     repos = {}
 
     dir_list = get_directory_list(top_dir_name)
-    puts "Found #{dir_list.count} repositories..."
+    puts "Found #{dir_list.count} repositories...".green
     dir_list.each do |dir_name|
       name = dir_name.split('/').last
-      puts "Working on: #{name}"
+      puts "Working on: #{name}".blue
       git_base_cmd = get_cmd("cd #{dir_name};git config --get remote.origin.url")
       git_base = `#{git_base_cmd}`.gsub(/\n/, '')
       project_types = sense_project_type(dir_name)
@@ -56,12 +56,12 @@ class CollectorTask
       }
       checkout_commit(dir_name, 'master')
       cmd = get_cmd("cd #{dir_name};git pull")
-      puts "\tPulling repository at #{git_base}"
+      puts "\tPulling repository at #{git_base}".green
       `#{cmd}`
       puts "\tGetting list of commits for project #{name}..."
       lines = git_log(dir_name)
-      puts "\tFound #{lines.split("\n").count} commits in total..."
-      puts "\tSaving repository details to database..."
+      puts "\tFound #{lines.split("\n").count} commits in total...".green
+      puts "\tSaving repository details to database...".green
       repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
       repo_details = JSON.parse(repo_return.body)
       puts "\tCreated repo ##{repo_details['id']} - #{repo_details['full_name']}"
@@ -77,6 +77,6 @@ class CollectorTask
     end
 
     save_bliss_file(top_dir_name, repos)
-    puts "Collector finished."
+    puts "Collector finished.".green
   end
 end

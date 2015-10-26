@@ -19,8 +19,8 @@ class LinterTask
       repo_key = repo['repo_key']
 
       repo_return = agent.get(
-        "#{host}/api/gitlog/linters_todo?repo_key=#{repo_key}",
-        auth_headers)
+      "#{host}/api/gitlog/linters_todo?repo_key=#{repo_key}",
+      auth_headers)
       json_return = JSON.parse(repo_return.body)
 
       linters = json_return['linters']
@@ -45,40 +45,41 @@ class LinterTask
             cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s)
             cmd = get_cmd("cd #{git_dir};#{cmd}") if cd_first
             puts "\tRunning linter: #{quality_tool}"
-            `#{cmd}`
-            key = "#{organization}_#{name}_#{commit}.#{ext}"
-            object_params = {
-              bucket: 'founderbliss-temp-storage',
-              key: key,
-              body: File.open(file_name, 'r').read,
-              requester_pays: true,
-              acl: 'bucket-owner-read'
-            }
-            $aws_client.put_object(object_params)
+            begin
+              `#{cmd}`
+              key = "#{organization}_#{name}_#{commit}.#{ext}"
+              object_params = {
+                bucket: 'founderbliss-temp-storage',
+                key: key,
+                body: File.open(file_name, 'r').read,
+                requester_pays: true,
+                acl: 'bucket-owner-read'
+              }
+              $aws_client.put_object(object_params)
 
-            lint_payload = {
-              commit: commit,
-              repo_key: repo_key,
-              linter_id: linter['id'],
-              lint_file_location: key }
+              lint_payload = {
+                commit: commit,
+                repo_key: repo_key,
+                linter_id: linter['id'],
+                lint_file_location: key }
 
-            lint_response = agent.post(
+                lint_response = agent.post(
                 "#{host}/api/commit/lint",
                 lint_payload,
                 auth_headers)
 
-            lint_return = JSON.parse(lint_response.body)
-            puts "\t\tlint_response: #{lint_return.inspect}"
+                lint_return = JSON.parse(lint_response.body)
+              rescue
+                puts "#{quality_tool} is not installed. Please refer to the docs at https://github.com/founderbliss/collector to ensure all dependencies are installed.".red
+              end
+            end
           end
 
+          # Go back to master at the end
+          checkout_commit(git_dir, 'master')
         end
+
+        puts dir_names.join
+        puts "Linter finished.".green
       end
-
-      # Go back to master at the end
-      checkout_commit(git_dir, 'master')
     end
-
-    puts dir_names.join
-    puts "Linter finished."
-  end
-end

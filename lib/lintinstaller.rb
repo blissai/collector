@@ -1,7 +1,7 @@
 class LintInstaller
 
   def initialize(languages)
-    puts "Installing linters..."
+    puts "Installing linters...".blue
     @languages = languages
   end
 
@@ -10,10 +10,15 @@ class LintInstaller
   end
 
   def php_dependecies
-    if !File.directory?(File.expand_path("~/phpcs"))
-      puts "Installing PHP Codesniffer..."
-      `git clone https://github.com/squizlabs/PHP_CodeSniffer.git #{File.expand_path("~/phpcs")}`
-      # install php codesniffer
+    begin
+      `php -v`
+      if !File.directory?(File.expand_path("~/phpcs"))
+        puts "Installing PHP Codesniffer...".green
+        `git clone https://github.com/squizlabs/PHP_CodeSniffer.git #{File.expand_path("~/phpcs")}`
+        # install php codesniffer
+      end
+    rescue
+      puts "PHP not installed. Please install PHP >= 5.1.2 and make sure it is added to your PATH.".red
     end
   end
 
@@ -22,7 +27,7 @@ class LintInstaller
     php_dependecies
     # install wpcs if not exists
     if !File.directory?(File.expand_path("~/wpcs"))
-      puts "Installing Wordpress Codesniffer..."
+      puts "Installing Wordpress Codesniffer...".green
       `git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git #{File.expand_path("~/wpcs")}`
       # point php codesniffer to wpcs
       `#{File.expand_path("~/phpcs/scripts/phpcs")} --config-set installed_paths #{File.expand_path("~/wpcs")}`
@@ -30,36 +35,48 @@ class LintInstaller
   end
 
   def js_dependencies
-    if `npm list -g jshint`.include? "empty"
-      puts "Installing jsHint..."
-      `npm install -g jshint`
-      `npm install --save-dev jshint-json`
+    begin
+      if `npm list -g jshint`.include? "empty"
+        puts "Installing jsHint...".green
+        `npm install -g jshint`
+        `npm install --save-dev jshint-json`
+      end
+    rescue
+      puts "Node Package Manager not installed. Please install NodeJS and NPM and make sure it is added to your PATH".red
     end
   end
 
   def python_dependencies
-    if !`pip freeze`.include?('django') || !`pip freeze`.include?('prospector')
-      puts "Installing Django and Prospector..."
-      `pip install django`
-      `pip install prospector`
+    begin
+      if !`pip freeze`.include?('django') || !`pip freeze`.include?('prospector')
+        puts "Installing Django and Prospector...".green
+        `pip install django`
+        `pip install prospector`
+      end
+    rescue
+      puts "Python not installed. Please install Python and make sure it is added to your PATH.".red
     end
   end
 
   def c_dependencies
-    if !`pip freeze`.include? 'lizard'
-      puts "Installing Lizard..."
-      `pip install lizard`
+    begin
+      if !`pip freeze`.include? 'lizard'
+        puts "Installing Lizard...".green
+        `pip install lizard`
+      end
+    rescue
+      puts "Python not installed. Please install Python and make sure it is added to your PATH.".red
     end
   end
 
   def ruby_dependencies
-    puts "Installing metric_fu..."
+    puts "Installing metric_fu...".green
     `gem install metric_fu`
   end
 
   def cpd_dependencies
     if !File.directory?(File.expand_path("~/pmd"))
-      puts "Installing pmd..."
+      puts "Installing pmd...".green
       `git clone https://github.com/iconnor/pmd.git #{File.expand_path("~/pmd")}`
     end
   end

@@ -21,10 +21,10 @@ class StatsTask
         auth_headers)
       json_return = JSON.parse(repo_return.body)
 
-      puts "Working on: #{name}"
+      puts "Working on: #{name}".green
       json_return.each do |metric|
         commit = metric['commit']
-        puts "Getting stats for #{commit}..."
+        puts "Getting stats for #{commit}..."..green
 
         stat_command = "git log --pretty=tformat: --numstat #{commit}"
         cmd = get_cmd("cd #{git_dir}; #{stat_command}")
@@ -43,7 +43,7 @@ class StatsTask
         language = sense_project_type(git_dir)
         cmd = "perl #{cloc_command} #{git_dir} #{cloc_options}"
 
-        puts "\tCounting total lines of code. This may take a while..."
+        puts "\tCounting total lines of code. This may take a while...".green
         total_cloc = `#{cmd}`
 
         # stdin, stdout, stderr = Open3.popen3(cmd)
@@ -51,17 +51,17 @@ class StatsTask
         remove_open_source_files(git_dir)
         cmd = "perl #{cloc_command} #{git_dir} #{cloc_options}"
 
-        puts "\tCounting original lines of code. This may take a while..."
+        puts "\tCounting original lines of code. This may take a while...".green
         cloc = `#{cmd}`
         # stdin, stdout, stderr = Open3.popen3(cmd)
         # cloc = stdout.read
-        puts "\tCounting lines of test code. This may take a while..."
+        puts "\tCounting lines of test code. This may take a while...".green
         if @cloc_test_dirs.present?
           cmd = "perl #{cloc_command} #{@cloc_test_dirs} #{cloc_options}"
           # puts "\t\t#{cmd}"
           cloc_tests = `#{cmd}`
         else
-          puts "\tNo known test pattern for cloc to run - skipped"
+          puts "\tNo known test pattern for cloc to run - skipped".blue
         end
         stat_payload = {
           repo_key: repo_key,
@@ -72,13 +72,13 @@ class StatsTask
           cloc: cloc,
           cloc_tests: cloc_tests
         }
-        puts "\tPosting commit stats to Bliss..."
+        puts "\tPosting commit stats to Bliss...".green
         stats_response = agent.post(
           "#{host}/api/commit/stats",
           stat_payload,
           auth_headers)
         stats_return = JSON.parse(stats_response.body)
-        puts "\tSuccessfully saved stats for commit #{commit}."
+        puts "\tSuccessfully saved stats for commit #{commit}.".green
         # puts "\t\tstats_response: #{stats_response.inspect}"
       end
 
@@ -87,6 +87,6 @@ class StatsTask
     end
 
     puts dir_names.join
-    puts "Stats finished."
+    puts "Stats finished.".green
   end
 end

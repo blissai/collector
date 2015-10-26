@@ -52,6 +52,10 @@ powershell.exe setup.ps1
 ````
 This will begin the installation process.
 
+You can also use Chocolatey to install PHP, however you will need to add 'C:\tools\php' to your path as this is not done automatically. Instructions on altering your path can be found here:
+
+
+
 Unix
 --------
 Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
