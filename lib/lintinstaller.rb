@@ -25,7 +25,7 @@ class LintInstaller
       puts "Installing Wordpress Codesniffer..."
       `git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git #{File.expand_path("~/wpcs")}`
       # point php codesniffer to wpcs
-      `#{File.expand_path("~/phpcs")} --config-set installed_paths #{File.expand_path("~/wpcs")}`
+      `#{File.expand_path("~/phpcs/scripts/phpcs")} --config-set installed_paths #{File.expand_path("~/wpcs")}`
     end
   end
 
