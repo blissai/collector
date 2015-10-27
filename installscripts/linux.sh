@@ -2,6 +2,15 @@
 
 if [[ -n "$(command -v yum)" ]]
 then
+if [[ ! -n "$(command -v rvm)" ]]
+  then
+  curl -L get.rvm.io | bash -s stable
+  source ~/.rvm/rvm.sh
+  sudo yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison iconv-devel
+  rvm install 2.0.0
+  rvm use 2.0.0 --default
+  rvm rubygems current
+fi
 if [[ ! -n "$(command -v npm)" ]]
   then
   sudo yum -y install nodejs
@@ -15,6 +24,16 @@ enabled=1" | sudo tee /etc/yum.repos.d/collector.repo
 sudo yum -y install collector
 elif [[ -n "$(command -v apt-get)" ]]
 then
+if [[ ! -n "$(command -v rvm)" ]]
+  then
+  sudo apt-add-repository -y ppa:rael-gc/rvm
+  sudo apt-get update
+  sudo apt-get -y install rvm
+  sudo apt-get -y install gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison iconv-devel
+  rvm install 2.0.0
+  rvm use 2.0.0 --default
+  rvm rubygems current
+fi
 if [[ ! -n "$(command -v npm)" ]]
   then
   sudo yum -y install nodejs npm
@@ -27,3 +46,4 @@ sudo apt-get -y install collector
 fi
 sudo chmod +x /opt/collector/collector.sh
 ln -s /opt/collector/collector.sh /usr/bin/collector
+echo "Installation complete."
