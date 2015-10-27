@@ -38,18 +38,22 @@ In addition, a number of linting tools are required:
 Unix
 --------
 #### Package Manager Installation ####
-Bliss Collector is available as a .deb or .rpm package for those wanting to use apt-get or yum to install the collector and it's dependencies.
+Bliss Collector is available as a .deb or .rpm package. You will need to add our deb/rpm repository to your package manager configuration.
 You can do this by running the 'linux.sh' script in the 'installscripts' directory:
 `````
-sh installscripts/linux.sh
+cd installscripts
+sh linux.sh
 `````
-#### Manual Installation ####
+<!-- #### Manual Installation ####
 Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
 There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
 In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
 ````
-./setup.sh
-````
+cd installscripts
+sh setup.sh
+```` -->
+
+You will need to reboot your system after running this scripts.
 
 Windows
 --------

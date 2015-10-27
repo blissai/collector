@@ -1,3 +1,3 @@
 ##!/bin/bash
 
-ruby blisscollector.rb
+ruby /opt/collector/blisscollector.rb

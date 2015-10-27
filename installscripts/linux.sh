@@ -5,9 +5,9 @@ then
 if [[ ! -n "$(command -v rvm)" ]]
   then
   echo "RVM not installed. Installing..."
-  yum install gcc-c++ patch readline readline-devel zlib zlib-devel
-  yum install libyaml-devel libffi-devel openssl-devel make
-  yum install bzip2 autoconf automake libtool bison iconv-devel
+  yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel
+  yum install -y libyaml-devel libffi-devel openssl-devel make
+  yum install -y bzip2 autoconf automake libtool bison iconv-devel
   echo "Downloading RVM..."
   curl -sSL https://rvm.io/mpapis.asc | gpg --import -
   curl -L get.rvm.io | bash -s stable
@@ -52,8 +52,8 @@ rvm use 2.0.0 --default
 if [[ ! -n "$(command -v npm)" ]]
 then
   echo "Node not installed. Installing..."
-  sudo yum -y install nodejs npm
-  sudo yum -y install gcc-c++ make
+  sudo apt-get -y install nodejs npm
+  sudo apt-get -y install gcc-c++ make
 fi
 wget -qO - https://deb.packager.io/key | sudo apt-key add -
 echo "deb https://deb.packager.io/gh/founderbliss/collector wheezy master" | sudo tee /etc/apt/sources.list.d/collector.list
