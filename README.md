@@ -62,6 +62,12 @@ http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-pa
 
 Unix
 --------
+Bliss Collector is available as a .deb or .rpm package for those wanting to use apt-get or yum to install the collector and it's dependencies.
+You can do this by running the 'linux.sh' script in the 'installscripts' directory:
+`````
+sh installscripts/linux.sh
+`````
+
 Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
 There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
 In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
