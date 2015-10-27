@@ -14,7 +14,6 @@ baseurl=https://rpm.packager.io/gh/founderbliss/collector/centos6/master
 enabled=1" | sudo tee /etc/yum.repos.d/collector.repo
 sudo yum install collector
 elif [[ -n "$(command -v apt-get)" ]]
-  sudo apt-get install nodejs
 then
 if [[ ! -n "$(command -v npm)" ]]
   then
