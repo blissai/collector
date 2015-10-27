@@ -22,6 +22,7 @@ echo "Download Ruby 2.x..."
 rvm install 2.0.0
 echo "Setting Ruby version to 2.x..."
 rvm use 2.0.0 --default
+rvm reload
 if [[ ! -n "$(command -v npm)" ]]
 then
   echo "Node not installed. Installing..."
