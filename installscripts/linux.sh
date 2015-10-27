@@ -1,10 +1,11 @@
 ##!/bin/bash
+
 if [[ -n "$(command -v yum)" ]]
 then
 if [[ ! -n "$(command -v npm)" ]]
   then
   sudo yum -y install nodejs
-  sudo yum install gcc-c++ make
+  sudo yum -y install gcc-c++ make
 fi
 sudo rpm --import https://rpm.packager.io/key
 echo "[collector]
