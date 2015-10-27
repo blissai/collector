@@ -68,16 +68,16 @@ You can do this by running the 'linux.sh' script in the 'installscripts' directo
 sh installscripts/linux.sh
 `````
 
-Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
+<!-- Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
 There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
 In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
 ````
 ./setup.sh
-````
+```` -->
 
-Setup
+Configuration
 --------
-You can run the Bliss Collector CLI tool by running blisscollecto.rb using the Ruby command in your terminal:
+You can run the Bliss Collector CLI tool by running blisscollector.rb using the Ruby command in your terminal:
 `````
 ruby blisscollector.rb
 `````
