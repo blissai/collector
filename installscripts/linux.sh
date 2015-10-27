@@ -11,10 +11,10 @@ if [[ ! -n "$(command -v rvm)" ]]
   curl -L get.rvm.io | bash -s stable
   source /etc/profile.d/rvm.sh
   rvm reload
-  rvm requirements run
-  rvm install 2.0.0
-  rvm use 2.0.0 --default
+  rvm requirements run  
 fi
+rvm install 2.0.0
+rvm use 2.0.0 --default
 if [[ ! -n "$(command -v npm)" ]]
   then
   sudo yum -y install nodejs
