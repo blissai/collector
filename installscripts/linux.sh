@@ -7,8 +7,7 @@ then
   baseurl=https://rpm.packager.io/gh/founderbliss/collector/centos6/master
   enabled=1" | sudo tee /etc/yum.repos.d/collector.repo
   sudo yum install collector
-fi
-if [[ -n "$(command -v apt-get)" ]]
+elif [[ -n "$(command -v apt-get)" ]]
 then
   wget -qO - https://deb.packager.io/key | sudo apt-key add -
   echo "deb https://deb.packager.io/gh/founderbliss/collector wheezy master" | sudo tee /etc/apt/sources.list.d/collector.list
