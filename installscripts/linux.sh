@@ -4,6 +4,7 @@ if [[ -n "$(command -v yum)" ]]
 then
 if [[ ! -n "$(command -v rvm)" ]]
   then
+  echo "RVM not installed. Installing..."
   yum install gcc-c++ patch readline readline-devel zlib zlib-devel
   yum install libyaml-devel libffi-devel openssl-devel make
   yum install bzip2 autoconf automake libtool bison iconv-devel
@@ -11,13 +12,14 @@ if [[ ! -n "$(command -v rvm)" ]]
   curl -L get.rvm.io | bash -s stable
   source /etc/profile.d/rvm.sh
   rvm reload
-  rvm requirements run  
+  rvm requirements run
 fi
+echo "Setting Ruby version to 2.x..."
 rvm install 2.0.0
 rvm use 2.0.0 --default
 if [[ ! -n "$(command -v npm)" ]]
   then
-  sudo yum -y install nodejs
+  sudo yum -y install nodejs --enablerepo=epel
   sudo yum -y install gcc-c++ make
 fi
 sudo rpm --import https://rpm.packager.io/key
@@ -29,17 +31,17 @@ sudo yum -y install collector
 elif [[ -n "$(command -v apt-get)" ]]
 then
 if [[ ! -n "$(command -v rvm)" ]]
-  then
+then
+  echo "RVM not installed. Installing..."
   sudo apt-add-repository -y ppa:rael-gc/rvm
   sudo apt-get update
   sudo apt-get -y install rvm
   sudo apt-get -y install gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison iconv-devel
-  rvm install 2.0.0
-  rvm use 2.0.0 --default
-  rvm rubygems current
 fi
+rvm install 2.0.0
+rvm use 2.0.0 --default
 if [[ ! -n "$(command -v npm)" ]]
-  then
+then
   sudo yum -y install nodejs npm
   sudo yum -y install gcc-c++ make
 fi
