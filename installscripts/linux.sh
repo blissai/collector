@@ -18,7 +18,8 @@ echo "Setting Ruby version to 2.x..."
 rvm install 2.0.0
 rvm use 2.0.0 --default
 if [[ ! -n "$(command -v npm)" ]]
-  then
+then
+  echo "Node not installed. Installing..."
   sudo yum -y install nodejs --enablerepo=epel
   sudo yum -y install gcc-c++ make
 fi
@@ -36,12 +37,15 @@ then
   sudo apt-add-repository -y ppa:rael-gc/rvm
   sudo apt-get update
   sudo apt-get -y install rvm
-  sudo apt-get -y install gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison iconv-devel
+  # sudo apt-get -y install gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison iconv-devel
+  rvm reload
+  rvm requirements run
 fi
 rvm install 2.0.0
 rvm use 2.0.0 --default
 if [[ ! -n "$(command -v npm)" ]]
 then
+  echo "Node not installed. Installing..."
   sudo yum -y install nodejs npm
   sudo yum -y install gcc-c++ make
 fi
