@@ -73,9 +73,9 @@ class BlissRunner
   # A function to set up a scheduled job to run 'automate' every x number of minutes
   def schedule_job
     puts "How often would you like to automatically run Bliss Collector?".blue
-    puts " (1) Every Day\n (2) Every Hour\n (3) Every Half-Hour\n (4) Every 10 Minutes"
+    puts " (1) Every Day\n (2) Every Hour\n (3) Every 10 Minutes"
     minutes = gets.chomp
-    if ![1, 2, 3, 4].include? minutes.to_i
+    if ![1, 2, 3].include? minutes.to_i
       puts 'This is not a option. Please choose 1, 2, 3 or 4.'
     else
       if Gem.win_platform?
@@ -92,10 +92,8 @@ class BlissRunner
       freq = "/SC DAILY"
     elsif option == 2
       freq = "/SC HOURLY"
-    elsif option == 3
-      freq = "/SC HOURLY"
     else
-      freq = "*/10 * * * * #{cwd}/cron_script.sh"
+      freq = "/SC MINUTE /MO 10"
     end
 
     # Get current path
@@ -122,8 +120,6 @@ class BlissRunner
       cron_entry = "0 23 * * * #{file_name}"
     elsif option == 2
       cron_entry = "0 * * * * #{file_name}"
-    elsif option == 3
-      cron_entry = "*/30 * * * * #{file_name}"
     else
       cron_entry = "*/10 * * * * #{file_name}"
     end

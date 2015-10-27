@@ -107,7 +107,7 @@ These should be run in the following order:
 
 Collector -> Stats -> Linter
 
-You can also schedule a cron job to run the above tasks at a specified interval, by typing 't'. The intervals that are currently supported are every day, every hour, every half-hour, and every ten minutes.
+You can also schedule a cron job to run the above tasks at a specified interval, by typing 't'. The intervals that are currently supported are every day, every hour, or every ten minutes.
 
 Notes
 -----
