@@ -24,7 +24,7 @@ class StatsTask
       puts "Working on: #{name}".green
       json_return.each do |metric|
         commit = metric['commit']
-        puts "Getting stats for #{commit}..."..green
+        puts "Getting stats for #{commit}...".green
 
         stat_command = "git log --pretty=tformat: --numstat #{commit}"
         cmd = get_cmd("cd #{git_dir}; #{stat_command}")

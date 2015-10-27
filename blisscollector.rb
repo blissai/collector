@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 $LOAD_PATH << 'lib'
-require 'bootstrap'
+require_relative 'lib/bootstrap'
 
 # The main program loop to accept commands for various tasks
 def program_loop

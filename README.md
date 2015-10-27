@@ -37,13 +37,13 @@ In addition, a number of linting tools are required:
 
 Unix
 --------
-### Package Manager Installation ###
+#### Package Manager Installation ####
 Bliss Collector is available as a .deb or .rpm package for those wanting to use apt-get or yum to install the collector and it's dependencies.
 You can do this by running the 'linux.sh' script in the 'installscripts' directory:
 `````
 sh installscripts/linux.sh
 `````
-### Manual Installation ###
+#### Manual Installation ####
 Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
 There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
 In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
@@ -76,12 +76,25 @@ You can also use Chocolatey to install PHP, however you will need to add 'C:\too
 
 http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-path
 
-Configuration
+Usage
 --------
+
+#### Manual Installation ####
 You can run the Bliss Collector CLI tool by running blisscollector.rb using the Ruby command in your terminal:
 `````
 ruby blisscollector.rb
 `````
+
+#### Package Manager Installation ####
+
+If you installed Bliss Collector using apt-get or yum, you can run the collector by typing:
+`````
+collector run blisscollector.rb
+`````
+from your terminal.
+
+#### Configuration ####
+
 The first time you do this, you will be prompted for the information set out in the 'Information Required' section above.
 This information will be stored in a YAML file, bliss-config.yml, in the main folder for future use. You can remove any of these entries to be prompted again, or you can updated the information stored in the config file.
 
@@ -94,9 +107,11 @@ These should be run in the following order:
 
 Collector -> Stats -> Linter
 
-You can also schedule a chron job to run the above tasks at a specified interval, by typing 't', and then inputing an integer that represents the the interval in minutes.
+You can also schedule a cron job to run the above tasks at a specified interval, by typing 't'. The intervals that are currently supported are every day, every hour, every half-hour, and every ten minutes.
 
-Typing '5' will run the job at 10:00, 10:05, 10:10 and so on.
+Notes
+-----
+*  You will need to make sure that the machine the Collector runs on has the appropriate SSH keys setup, so that the application can 'git pull' without being prompted for a username/password combination.
 
 Issues
 --------

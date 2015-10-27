@@ -1,3 +1,4 @@
+Set-ExecutionPolicy RemoteSigned
 Write-Host "Installing Chocolatey Package Manager...";
 iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'));
 $env:path = $env:path += ";C:\ProgramData\chocolatey\bin";

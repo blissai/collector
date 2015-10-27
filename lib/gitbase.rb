@@ -1,6 +1,5 @@
-require 'copyright'
+require_relative 'copyright'
 module Gitbase
-
   def checkout_commit(git_dir, commit)
     throw 'Git directory not found' unless File.exist?(git_dir)
     cmd = get_cmd("cd #{git_dir};git reset --hard HEAD")
@@ -63,6 +62,8 @@ module Gitbase
         file_name = "#{temp_start}#{match[1]}"
         todo << ["rm #{file_name}", file_name] if match[1]
       end
+      if true
+      end
     end
     todo.uniq!
     todo.each do |cmd, file_name|
@@ -98,6 +99,14 @@ module Gitbase
       "bin\\cloc"
     else
       "bin/cloc"
+    end
+  end
+
+  def remove_command
+    if Gem.win_platform?
+      "rm -r -Force"
+    else
+      "rm -rf"
     end
   end
 

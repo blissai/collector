@@ -31,7 +31,7 @@ class LinterTask
         quality_command = linter ['quality_command']
         metrics = json_return['metrics']
         puts "Working on repo: #{repo['full_name']}"
-        puts "No recent commits to work." if metrics.empty?
+        puts "No recent commits to analyze." if metrics.empty?
         metrics.each do |metric|
           Dir.mktmpdir do |dir_name|
             commit = metric['commit']
@@ -74,12 +74,11 @@ class LinterTask
               end
             end
           end
-
           # Go back to master at the end
           checkout_commit(git_dir, 'master')
         end
-
         puts dir_names.join
-        puts "Linter finished.".green
       end
+      puts "Linter finished.".green
     end
+  end

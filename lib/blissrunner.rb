@@ -2,8 +2,8 @@
 class BlissRunner
   def initialize
     # Load configuration File if it exists
-    if File.exist? 'bliss-config.yml'
-      @config = YAML::load_file('bliss-config.yml')
+    if File.exist? "#{File.expand_path(File.dirname($0))}/bliss-config.yml"
+      @config = YAML::load_file("#{File.expand_path(File.dirname($0))}/bliss-config.yml")
     else
       @config = {}
     end
@@ -33,7 +33,7 @@ class BlissRunner
     get_or_save_arg('What\'s your AWS Access Secret?', 'AWS_SECRET_ACCESS_KEY')
     get_or_save_arg('What is the hostname of your Bliss instance?', 'BLISS_HOST')
     get_or_save_arg('What is the name of your organization in git?', 'ORG_NAME')
-    File.open('bliss-config.yml', 'w') { |f| f.write @config.to_yaml } # Store
+    File.open("#{File.expand_path(File.dirname($0))}/bliss-config.yml", 'w') { |f| f.write @config.to_yaml } # Store
     puts 'Collector configured.'
     puts 'Configuring AWS...'
     configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
@@ -53,13 +53,7 @@ class BlissRunner
       puts 'Running Stats'
       StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
     elsif command == 'T'
-      puts 'How often, in minutes, would you like to automatically run Bliss Collector?'
-      minutes = gets.chomp
-      if !is_i?(minutes)
-        puts 'This is not a valid integer. Please try again with a positive integer.'
-      else
-        schedule_job(minutes)
-      end
+      schedule_job
     else
       puts 'Not a valid option. Please choose Collector, Lint, Stats or Quit.' unless command == 'Q'
     end
@@ -77,35 +71,77 @@ class BlissRunner
   end
 
   # A function to set up a scheduled job to run 'automate' every x number of minutes
-  def schedule_job(every_x_minutes)
-    if Gem.win_platform?
+  def schedule_job
+    puts "How often would you like to automatically run Bliss Collector?".blue
+    puts " (1) Every Day\n (2) Every Hour\n (3) Every Half-Hour\n (4) Every 10 Minutes"
+    minutes = gets.chomp
+    if ![1, 2, 3, 4].include? minutes.to_i
+      puts 'This is not a option. Please choose 1, 2, 3 or 4.'
     else
-      # Create a shell script that runs blissauto
-      cwd = `pwd`.gsub(/\n/, "")
-      cron_command = "cd  #{cwd}; ruby blissauto.rb"
-      file_name = "#{cwd}/cron_script.sh"
-      File.open(file_name, 'w') { |file| file.write(cron_command) }
+      if Gem.win_platform?
 
-      # Create a file for Cron
-      cron_entry = "*/#{every_x_minutes} * * * * #{cwd}/cron_script.sh"
-      File.open('/etc/cron.d/bliss', 'w') { |file| file.write(cron_entry) }
-      puts 'Job scheduled successfully.'
+      else
+        cron_job(option)
+      end
     end
+  end
+
+  def task_sched
+    # Choose frequency
+    if option == 1
+      freq = "/SC DAILY"
+    elsif option == 2
+      freq = "/SC HOURLY"
+    elsif option == 3
+      freq = "/SC HOURLY"
+    else
+      freq = "*/10 * * * * #{cwd}/cron_script.sh"
+    end
+
+    # Get current path
+    cwd = `@powershell $pwd.path`.gsub(/\n/, "")
+    task_cmd = "cd  #{cwd}\nruby blissauto.rb"
+
+    # create batch file
+    file_name = "#{cwd}\\blisstask.bat"
+    File.open(file_name, 'w') { |file| file.write(task_cmd) }
+
+    # schedule task with schtasks
+    cmd = "schtasks /Create #{freq} /TN BlissCollector /TR #{file_name}"
+    `#{cmd}`
+  end
+
+  def cron_job(option)
+    # Create a shell script that runs blissauto
+    cwd = `pwd`.gsub(/\n/, "")
+    cron_command = "cd  #{cwd}; ruby blissauto.rb"
+    file_name = "#{cwd}/blisstask.sh"
+    File.open(file_name, 'w') { |file| file.write(cron_command) }
+    # Format cron entry
+    if option == 1
+      cron_entry = "0 23 * * * #{file_name}"
+    elsif option == 2
+      cron_entry = "0 * * * * #{file_name}"
+    elsif option == 3
+      cron_entry = "*/30 * * * * #{file_name}"
+    else
+      cron_entry = "*/10 * * * * #{file_name}"
+    end
+
+    # Create a file for Cron
+    File.open('/etc/cron.d/bliss', 'w') { |file| file.write(cron_entry) }
+    puts 'Job scheduled successfully.'
   end
 
   private
   # Checks for saved argument in config file, otherwise prompts user
   def get_or_save_arg(message, env_name)
     if @config && @config[env_name]
-      puts "Loading #{env_name} from bliss-config.yml..."
+      puts "Loading #{env_name} from bliss-config.yml...".green
     else
-      puts message
+      puts message.blue
       arg = gets.chomp
       @config[env_name] = arg
     end
-  end
-
-  def is_i? string_to_check
-    !!(string_to_check =~ /\A[-+]?[0-9]+\z/)
   end
 end
