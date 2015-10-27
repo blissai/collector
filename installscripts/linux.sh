@@ -26,3 +26,4 @@ sudo apt-get update
 sudo apt-get -y install collector
 fi
 sudo chmod +x /opt/collector/collector.sh
+ln -s /opt/collector/collector.sh /usr/bin/collector

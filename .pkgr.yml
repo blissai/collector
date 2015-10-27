@@ -3,4 +3,5 @@ dependencies:
   - php
   - perl
   - python
+  - ruby
 cli: false
