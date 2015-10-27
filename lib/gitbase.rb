@@ -65,6 +65,10 @@ module Gitbase
       if true
       end
     end
+    if File.exist?(File.join(git_dir,'NuGet.config')) && Dir.exist?(File.join(git_dir,'packages'))
+      file_name = File.join(git_dir, 'packages')
+      todo << ["#{remove_command} #{file_name}", file_name]
+    end
     todo.uniq!
     todo.each do |cmd, file_name|
       #puts cmd
