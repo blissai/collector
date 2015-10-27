@@ -4,12 +4,16 @@ if [[ -n "$(command -v yum)" ]]
 then
 if [[ ! -n "$(command -v rvm)" ]]
   then
+  yum install gcc-c++ patch readline readline-devel zlib zlib-devel
+  yum install libyaml-devel libffi-devel openssl-devel make
+  yum install bzip2 autoconf automake libtool bison iconv-devel
+  curl -sSL https://rvm.io/mpapis.asc | gpg --import -
   curl -L get.rvm.io | bash -s stable
-  source ~/.rvm/rvm.sh
-  sudo yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison iconv-devel
+  source /etc/profile.d/rvm.sh
+  rvm reload
+  rvm requirements run
   rvm install 2.0.0
   rvm use 2.0.0 --default
-  rvm rubygems current
 fi
 if [[ ! -n "$(command -v npm)" ]]
   then
