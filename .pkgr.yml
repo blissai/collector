@@ -1,6 +1,5 @@
 dependencies:
   - git
   - php
-  - nodejs
   - perl
   - python
