@@ -35,6 +35,22 @@ In addition, a number of linting tools are required:
 *  Wordpress Codesniffer (for Wordpress repositories)
 *  csslint (for css file linting)
 
+Unix
+--------
+### Package Manager Installation ###
+Bliss Collector is available as a .deb or .rpm package for those wanting to use apt-get or yum to install the collector and it's dependencies.
+You can do this by running the 'linux.sh' script in the 'installscripts' directory:
+`````
+sh installscripts/linux.sh
+`````
+### Manual Installation ###
+Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
+There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
+In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
+````
+./setup.sh
+````
+
 Windows
 --------
 The easiest way to install Ruby and Ruby DevKit on Windows is by using RailsInstaller, which can be found at:
@@ -59,22 +75,6 @@ http://www.sitepoint.com/how-to-install-php-on-windows/
 You can also use Chocolatey to install PHP, however you will need to add 'C:\tools\php' to your path as this is not done automatically. Instructions on altering your path can be found here:
 
 http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-path
-
-Unix
---------
-### Package Manager ###
-Bliss Collector is available as a .deb or .rpm package for those wanting to use apt-get or yum to install the collector and it's dependencies.
-You can do this by running the 'linux.sh' script in the 'installscripts' directory:
-`````
-sh installscripts/linux.sh
-`````
-### Manual Install ###
-Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
-There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
-In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
-````
-./setup.sh
-````
 
 Configuration
 --------
