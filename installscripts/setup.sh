@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-if [[ -n "$(command -v apt-get)" ]]; then
+if [[ -n "$(command -v apt-get)" ]]
+then
   apt-get -y update
   apt-get -y install build-essential zlib1g-dev libssl-dev libreadline6-dev libyaml-dev
   cd /tmp
@@ -13,7 +14,8 @@ if [[ -n "$(command -v apt-get)" ]]; then
   sudo apt-get install nodejs
 fi
 
-if [[ -n "$(command -v yum)" ]]; then
+if [[ -n "$(command -v yum)" ]]
+then
   sudo yum install ruby
   sudo yum install php55w php55w-opcache
   sudo yum install nodejs
