@@ -3,8 +3,8 @@ if [[ -n "$(command -v yum)" ]]
 then
   sudo rpm --import https://rpm.packager.io/key
   echo "[collector]
-  name=Repository for founderbliss/collector application.
-  baseurl=https://rpm.packager.io/gh/founderbliss/collector/centos6/master
+  name=Repository for founderbliss/collector application.\
+  baseurl=https://rpm.packager.io/gh/founderbliss/collector/centos6/master\
   enabled=1" | sudo tee /etc/yum.repos.d/collector.repo
   sudo yum install collector
 fi
