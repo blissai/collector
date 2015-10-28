@@ -55,9 +55,9 @@ sudo apt-get update
 sudo apt-get -y install collector
 fi
 echo "Downloading Ruby 2.x..."
-rvm install 2.0.0
+rvm install 2.2.2
 echo "Setting Ruby version to 2.x..."
-rvm use 2.0.0 --default
+rvm use 2.2.2 --default
 rvm reload
 sudo chmod +x /opt/collector/collector.sh
 sudo ln -s /opt/collector/collector.sh /usr/bin/collector
