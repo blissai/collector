@@ -35,7 +35,7 @@ In addition, a number of linting tools are required:
 *  Wordpress Codesniffer (for Wordpress repositories)
 *  csslint (for css file linting)
 
-Unix
+Unix (CentOS/Ubuntu)
 --------
 #### Package Manager Installation ####
 Bliss Collector is available as a .deb or .rpm package. You will need to add our deb/rpm repository to your package manager configuration.

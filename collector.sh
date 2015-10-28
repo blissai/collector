@@ -17,4 +17,9 @@ else
 
 fi
 cd /opt/collector
+if [[ ! -n "$(command -v bundle)"]]
+then
+gem install bundler
+fi
+bundle install
 ruby /opt/collector/blisscollector.rb
