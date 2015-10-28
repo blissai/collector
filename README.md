@@ -93,7 +93,7 @@ ruby blisscollector.rb
 
 If you installed Bliss Collector using apt-get or yum, you can run the collector by typing:
 `````
-collector run blisscollector.rb
+collector
 `````
 from your terminal.
 

@@ -63,22 +63,18 @@ class LinterTask
                 linter_id: linter['id'],
                 lint_file_location: key }
 
-                lint_response = agent.post(
-                "#{host}/api/commit/lint",
-                lint_payload,
-                auth_headers)
-
-                lint_return = JSON.parse(lint_response.body)
-              rescue
-                puts "#{quality_tool} is not installed. Please refer to the docs at https://github.com/founderbliss/collector to ensure all dependencies are installed.".red
-              end
+              lint_response = agent.post("#{host}/api/commit/lint", lint_payload, auth_headers)
+              lint_return = JSON.parse(lint_response.body)
+            rescue
+              puts "#{quality_tool} is not installed. Please refer to the docs at https://github.com/founderbliss/collector to ensure all dependencies are installed.".red
             end
           end
-          # Go back to master at the end
-          checkout_commit(git_dir, 'master')
         end
-        puts dir_names.join
+        # Go back to master at the end
+        checkout_commit(git_dir, 'master')
       end
-      puts "Linter finished.".green
+      puts dir_names.join
     end
+    puts "Linter finished.".green
   end
+end

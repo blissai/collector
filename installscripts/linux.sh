@@ -18,7 +18,7 @@ if [[ ! -n "$(command -v rvm)" ]]
   echo "Installing RVM dependencies..."
   rvm requirements run
 fi
-echo "Download Ruby 2.x..."
+echo "Downloading Ruby 2.x..."
 rvm install 2.0.0
 echo "Setting Ruby version to 2.x..."
 rvm use 2.0.0 --default
@@ -62,4 +62,5 @@ sudo apt-get -y install collector
 fi
 sudo chmod +x /opt/collector/collector.sh
 ln -s /opt/collector/collector.sh /usr/bin/collector
-echo "Installation complete."
+ln -s /opt/collector/blissauto.sh /usr/bin/autocollector
+echo "Installation complete. Please reboot your system."
