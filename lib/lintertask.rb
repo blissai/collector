@@ -65,6 +65,7 @@ class LinterTask
               lint_response = agent.post("#{host}/api/commit/lint", lint_payload, auth_headers)
               lint_return = JSON.parse(lint_response.body)
             rescue Exception => e
+              puts "Your AWS Access Key is invalid...".red
               $logger.error("#{Time.now}: Your AWS Access Key is invalid...") if  e.is_a? Aws::S3::Errors::InvalidAccessKeyId
               if e.is_a? Errno::ENOENT
                 puts "#{quality_tool} is not installed. Please refer to the docs at https://github.com/founderbliss/collector to ensure all dependencies are installed.".red

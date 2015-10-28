@@ -33,6 +33,7 @@ class CollectorTask
     begin
       $aws_client.put_object(object_params)
     rescue Aws::S3::Errors::InvalidAccessKeyId
+      puts "Your AWS Access Key is invalid...".red
       $logger.error("#{Time.now}: Your AWS Access Key is invalid...")
     end
     key
