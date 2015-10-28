@@ -25,6 +25,7 @@ then
   sudo yum -y install nodejs
   sudo yum -y install gcc-c++ make
 fi
+sudo yum install -y git php
 elif [[ -n "$(command -v apt-get)" ]]
 then
 if [[ ! -n "$(command -v rvm)" ]]
@@ -43,6 +44,7 @@ then
   sudo apt-get -y install nodejs npm
   sudo apt-get -y install gcc-c++ make
 fi
+sudo apt-get -y install git php
 fi
 echo "Downloading Ruby 2.x..."
 rvm install 2.2.2

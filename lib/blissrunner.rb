@@ -2,8 +2,8 @@
 class BlissRunner
   def initialize
     # Load configuration File if it exists
-    if File.exist? "#{File.expand_path(File.dirname($0))}/bliss-config.yml"
-      @config = YAML::load_file("#{File.expand_path(File.dirname($0))}/bliss-config.yml")
+    if File.exist? "#{File.expand_path('~')}/bliss-config.yml"
+      @config = YAML::load_file("#{File.expand_path('~')}/bliss-config.yml")
     else
       @config = {}
     end
