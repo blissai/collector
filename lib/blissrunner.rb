@@ -7,6 +7,7 @@ class BlissRunner
     else
       @config = {}
     end
+    FileUtils.mkdir_p "#{File.expand_path('~/collector/logs')}"
     $logger = Logger.new("#{File.expand_path('~/collector/logs/blisslog.txt')}", 'daily')
     get_config
     DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
