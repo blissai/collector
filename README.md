@@ -81,9 +81,8 @@ http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-pa
 
 Usage
 --------
-
 #### Unix ####
-The install script add's a symlink to the /usr/bin directory. As such, you can run the CLI with the following command:
+The install script adds a symlink to the /usr/bin directory. As such, you can run the CLI with the following command:
 `````
 collector
 `````
@@ -116,7 +115,6 @@ Notes
 
 Issues
 --------
-
 Issues are reported via github "Issues":
 
 https://github.com/founderbliss/collector/issues

@@ -55,8 +55,11 @@ class LinterTask
                 requester_pays: true,
                 acl: 'bucket-owner-read'
               }
-              $aws_client.put_object(object_params)
-
+              begin
+                $aws_client.put_object(object_params)
+              rescue Aws::S3::Errors::InvalidAccessKeyId
+                $logger.error("#{Time.now}: Your AWS Access Key is invalid...")
+              end
               lint_payload = {
                 commit: commit,
                 repo_key: repo_key,
@@ -67,6 +70,7 @@ class LinterTask
               lint_return = JSON.parse(lint_response.body)
             rescue
               puts "#{quality_tool} is not installed. Please refer to the docs at https://github.com/founderbliss/collector to ensure all dependencies are installed.".red
+              $logger.warn("#{Time.now}: Dependency Error: #{quality_tool} not installed...")
             end
           end
         end

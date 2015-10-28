@@ -16,7 +16,7 @@ class CollectorTask
   end
 
   def prepare_log(organization, name, lines)
-    puts "\tSaving repo data to AWS Bucket...".green
+    puts "\tSaving repo data to AWS Bucket...".blue
     # bucket = s3.bucket('founderbliss-temp-storage')
     # obj = bucket.object("#{organization}_#{name}_git.log")
     # string data
@@ -30,7 +30,11 @@ class CollectorTask
       requester_pays: true,
       acl: 'bucket-owner-read'
     }
-    $aws_client.put_object(object_params)
+    begin
+      $aws_client.put_object(object_params)
+    rescue Aws::S3::Errors::InvalidAccessKeyId
+      $logger.error("#{Time.now}: Your AWS Access Key is invalid...")
+    end
     key
   end
 
@@ -44,7 +48,7 @@ class CollectorTask
     puts "Found #{dir_list.count} repositories...".green
     dir_list.each do |dir_name|
       name = dir_name.split('/').last
-      puts "Working on: #{name}".blue
+      puts "Working on: #{name}...".blue
       git_base_cmd = get_cmd("cd #{dir_name};git config --get remote.origin.url")
       git_base = `#{git_base_cmd}`.gsub(/\n/, '')
       project_types = sense_project_type(dir_name)
@@ -56,15 +60,15 @@ class CollectorTask
       }
       checkout_commit(dir_name, 'master')
       cmd = get_cmd("cd #{dir_name};git pull")
-      puts "\tPulling repository at #{git_base}".green
+      puts "\tPulling repository at #{git_base}...".blue
       `#{cmd}`
-      puts "\tGetting list of commits for project #{name}..."
+      puts "\tGetting list of commits for project #{name}...".blue
       lines = git_log(dir_name)
-      puts "\tFound #{lines.split("\n").count} commits in total...".green
-      puts "\tSaving repository details to database...".green
+      puts "\tFound #{lines.split("\n").count} commits in total.".green
+      puts "\tSaving repository details to database...".blue
       repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
       repo_details = JSON.parse(repo_return.body)
-      puts "\tCreated repo ##{repo_details['id']} - #{repo_details['full_name']}"
+      puts "\tCreated repo ##{repo_details['id']} - #{repo_details['full_name']}".green
       json_return = JSON.parse(repo_return.body)
       repos[name] = json_return
       repo_key = json_return['repo_key']

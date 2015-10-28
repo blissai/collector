@@ -7,21 +7,22 @@ class BlissRunner
     else
       @config = {}
     end
+    $logger = Logger.new("#{File.expand_path('~/collector/logs/blisslog.txt')}". 'daily')
     get_config
     DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
   # Global AWS Configuration
   def configure_aws(key, secret)
-    # If Windows, use AWS's bundled ssl cert
-    if Gem.win_platform?
-      Aws.use_bundled_cert!
-    end
-    # do this once, and all s3 clients will now accept `:requester_pays` to all operations
-    Aws::S3::Client.add_plugin(RequesterPays)
-    aws_credentials = Aws::Credentials.new(key, secret)
-    # Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
-    $aws_client = Aws::S3::Client.new(region: 'us-east-1', credentials: aws_credentials)
+      # If Windows, use AWS's bundled ssl cert
+      if Gem.win_platform?
+        Aws.use_bundled_cert!
+      end
+      # do this once, and all s3 clients will now accept `:requester_pays` to all operations
+      Aws::S3::Client.add_plugin(RequesterPays)
+      aws_credentials = Aws::Credentials.new(key, secret)
+      # Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
+      $aws_client = Aws::S3::Client.new(region: 'us-east-1', credentials: aws_credentials)
   end
 
   # Initialize state from config file or user input
@@ -62,11 +63,15 @@ class BlissRunner
 
   # A function that automates the above three functions for a scheduled job
   def automate
+    $logger.info("#{Time.now}: Scheduled task has started...")
     puts 'Running Collector'
+    $logger.info("#{Time.now}: Running collector...")
     CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
     puts 'Running Stats'
+    $logger.info("#{Time.now}: Running stats...")
     StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
     puts 'Running Linter'
+    $logger.info("#{Time.now}: Running linter...")
     LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
   end
 

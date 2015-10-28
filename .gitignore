@@ -90,3 +90,6 @@ dump.rdb
 .ruby-version
 bliss-config.yml
 bliss-installer.exe
+
+# Ignore log files
+/logs/*

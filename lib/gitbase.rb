@@ -28,7 +28,7 @@ module Gitbase
 
   def remove_open_source_files(git_dir)
     # Remove open source files
-    puts "\tRemoving open source files..."
+    puts "\tRemoving open source files...".blue
     open_source_lines = nil
     if Gem.win_platform?
       egrep_cmd = "C:/Program Files (x86)/GnuWin32/bin/egrep.exe"
@@ -80,7 +80,7 @@ module Gitbase
   end
 
   def find_copyright(git_dir, is_demo=false)
-    puts "Finding copyrights: #{git_dir}"
+    puts "Finding copyrights: #{git_dir}".blue
     owners = []
     egrep_cmd = Gem.win_platform? ? "\"C:/Program Files (x86)/GnuWin32/bin/egrep.exe\"" : 'egrep'
     copyright_lines = `#{egrep_cmd} -i "copyright|\(c\)|\&copy\;" #{git_dir}/* -R`
@@ -90,7 +90,7 @@ module Gitbase
       owners << owner
     end
     owners = owners.compact.uniq
-    puts "Found #{owners.count} owners under: #{git_dir}"
+    puts "Found #{owners.count} owners under: #{git_dir}".green
     owners
   end
 
@@ -228,5 +228,65 @@ module Gitbase
     else
       File.read(file_path).include?(search_string)
     end
+  end
+
+  def get_test_dirs(git_dir)
+    cloc_test_dirs = nil
+    if File.exist?(File.join(git_dir,"config","boot.rb"))
+      dirs = []
+      ['test', 'spec'].each do |test_dir|
+        if File.directory?(File.join(git_dir,test_dir))
+          dirs << File.join(git_dir,test_dir)
+        end
+      end
+      cloc_test_dirs = dirs.join(" ") if dirs.present?
+    end
+    if File.exist?(File.join(git_dir,"Podfile"))
+      dirs = []
+      ['test', 'KIFTests'].each do |test_dir|
+        if File.directory?(File.join(git_dir, test_dir))
+          dirs << File.join(git_dir, test_dir)
+        end
+      end
+      cloc_test_dirs = dirs.join(" ") if dirs.present?
+    end
+    if File.exist?(File.join(git_dir, "Godeps"))
+      cloc_test_dirs = "#{git_dir} --match-f=_test"
+    end
+    if File.directory?(File.join(git_dir, "wp-content"))
+      cloc_test_dirs = "#{git_dir} --match-f=Test.php"
+    end
+    if File.exist?(File.join(git_dir, "index.php"))
+      cloc_test_dirs = "#{git_dir} --match-f=Test.php"
+    end
+    if File.exist?(File.join(git_dir, "server.php"))
+      if file_contains("#{git_dir}/server.php", /package[ ]+Laravel/)
+        cloc_test_dirs = "#{git_dir} --match-f=Test.php"
+      end
+      elsif File.exist?(File.join(git_dir, "codeception.yml"))
+        dirs = []
+        ['tests'].each do |test_dir|
+          if File.directory?(File.join(git_dir, test_dir))
+            dirs << File.join(git_dir, test_dir)
+          end
+        end
+        cloc_test_dirs = dirs.join(" ") if dirs.present?
+    end
+    if File.exist?(File.join(git_dir, "manage.py"))
+      if file_contains("#{git_dir}/manage.py", "django")
+        cloc_test_dirs = "#{git_dir} --match-f='test[\s]*.py'"
+      end
+    end
+    if cloc_test_dirs.nil?
+      # Go with some pretty wide defaults for finding tests
+      dirs = []
+      ['test', 'spec'].each do |test_dir|
+        if File.directory?("#{git_dir}/#{test_dir}")
+          dirs << "#{git_dir}/#{test_dir}"
+        end
+      end
+      cloc_test_dirs = dirs.join(" ") if dirs.present?
+    end
+    cloc_test_dirs
   end
 end
