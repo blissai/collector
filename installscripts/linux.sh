@@ -65,6 +65,4 @@ sudo chmod +x /opt/collector/collector.sh
 ln -s /opt/collector/collector.sh /usr/bin/collector
 ln -s /opt/collector/blissauto.sh /usr/bin/autocollector
 cd /opt/collector
-gem install bundler
-bundle install
 echo "Installation complete. Please reboot your system."

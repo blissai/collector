@@ -16,10 +16,12 @@ else
   printf "ERROR: An RVM installation was not found.\n"
 
 fi
+
 cd /opt/collector
-if [[ ! -n "$(command -v bundle)"]]
-then
+
+if [[ ! -n "$(command -v bundle)" ]]; then
 gem install bundler
 fi
-bundle install
+
+bundle install --quiet
 ruby /opt/collector/blisscollector.rb
