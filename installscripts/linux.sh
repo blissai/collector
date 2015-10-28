@@ -26,7 +26,8 @@ rvm reload
 if [[ ! -n "$(command -v npm)" ]]
 then
   echo "Node not installed. Installing..."
-  sudo yum -y install nodejs --enablerepo=epel
+  curl -sL https://rpm.nodesource.com/setup | bash -
+  sudo yum -y install nodejs
   sudo yum -y install gcc-c++ make
 fi
 sudo rpm --import https://rpm.packager.io/key
@@ -63,4 +64,7 @@ fi
 sudo chmod +x /opt/collector/collector.sh
 ln -s /opt/collector/collector.sh /usr/bin/collector
 ln -s /opt/collector/blissauto.sh /usr/bin/autocollector
+cd /opt/collector
+gem install bundler
+bundle install
 echo "Installation complete. Please reboot your system."
