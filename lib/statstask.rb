@@ -64,7 +64,7 @@ class StatsTask
 
           puts "\tCounting lines of test code. This may take a while...".blue
           cloc_test_dirs = get_test_dirs(git_dir)
-          if !cloc_test_dirs.nil?!
+          if !cloc_test_dirs.nil?
             cmd = "perl #{cloc_command} #{cloc_test_dirs} #{cloc_options}"
             # puts "\t\t#{cmd}"
             begin
