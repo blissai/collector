@@ -17,11 +17,11 @@ else
 
 fi
 
-cd /opt/collector
+cd ~/collector
 
 if [[ ! -n "$(command -v bundle)" ]]; then
 gem install bundler
 fi
 
 bundle install --quiet
-ruby /opt/collector/blisscollector.rb
+ruby ~/collector/blisscollector.rb

@@ -33,7 +33,7 @@ class BlissRunner
     get_or_save_arg('What\'s your AWS Access Secret?', 'AWS_SECRET_ACCESS_KEY')
     get_or_save_arg('What is the hostname of your Bliss instance?', 'BLISS_HOST')
     get_or_save_arg('What is the name of your organization in git?', 'ORG_NAME')
-    File.open("#{File.expand_path(File.dirname($0))}/bliss-config.yml", 'w') { |f| f.write @config.to_yaml } # Store
+    File.open("#{File.expand_path('~')}/bliss-config.yml", 'w') { |f| f.write @config.to_yaml } # Store
     puts 'Collector configured.'
     puts 'Configuring AWS...'
     configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
