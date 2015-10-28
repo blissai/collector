@@ -37,9 +37,8 @@ In addition, a number of linting tools are required:
 
 Unix (CentOS/Ubuntu)
 --------
-#### Package Manager Installation ####
-Bliss Collector is available as a .deb or .rpm package. You will need to add our deb/rpm repository to your package manager configuration.
-You can do this by running the 'linux.sh' script in the 'installscripts' directory:
+There is a shell script in the 'installscripts' that will handle the installation of dependencies.
+You can run it by typing the following commands into your terminal:
 `````
 cd installscripts
 sh linux.sh
@@ -53,7 +52,7 @@ cd installscripts
 sh setup.sh
 ```` -->
 
-You will need to reboot your system after running this scripts.
+You will need to reboot your system after running this script.
 
 Windows
 --------
@@ -83,19 +82,17 @@ http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-pa
 Usage
 --------
 
-#### Manual Installation ####
-You can run the Bliss Collector CLI tool by running blisscollector.rb using the Ruby command in your terminal:
-`````
-ruby blisscollector.rb
-`````
-
-#### Package Manager Installation ####
-
-If you installed Bliss Collector using apt-get or yum, you can run the collector by typing:
+#### Unix ####
+The install script add's a symlink to the /usr/bin directory. As such, you can run the CLI with the following command:
 `````
 collector
 `````
-from your terminal.
+
+#### Windows ####
+To run the CLI, navigate to the git directory in a shell, and type:
+`````
+ruby blisscollector.rb
+`````
 
 #### Configuration ####
 
