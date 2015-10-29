@@ -64,10 +64,12 @@ class BlissRunner
 
   # A function that automates the above three functions for a scheduled job
   def automate
+    if !File.exists?("#{@config['TOP_LVL_DIR']}/.bliss.json")
     $logger.info(" Scheduled task has started...")
     puts 'Running Collector'
-    $logger.info(" Running collector...")
-    CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
+      $logger.info(" Running collector...")
+      CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
+    end
     puts 'Running Stats'
     $logger.info(" Running stats...")
     StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])

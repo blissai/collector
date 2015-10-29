@@ -39,7 +39,7 @@ class StatsTask
         "#{host}/api/gitlog/stats_todo?repo_key=#{repo_key}",
         auth_headers)
         json_return = JSON.parse(repo_return.body)
-        puts "Working on: #{name} (#{total_commits_done + 1} / #{total_commits_count})".green if total_commits_count >= total_commits_done
+        puts "Working on: #{name}".green if total_commits_count >= total_commits_done
         json_return.each do |metric|
           commit = metric['commit']
           puts "Getting stats for #{commit}... (#{total_commits_done + 1} / #{total_commits_count})".blue
