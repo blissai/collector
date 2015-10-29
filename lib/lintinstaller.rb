@@ -18,6 +18,7 @@ class LintInstaller
         # install php codesniffer
       end
     rescue
+      $logger.error("Dependency Error: PHP not installed...")
       puts "PHP not installed. Please install PHP >= 5.1.2 and make sure it is added to your PATH.".red
     end
   end
@@ -43,7 +44,7 @@ class LintInstaller
       end
     rescue
       puts "Node Package Manager not installed. Please install NodeJS and NPM and make sure it is added to your PATH".red
-      $logger.warn("#{Time.now}: Dependency Error: Node not installed...")
+      $logger.error("Dependency Error: Node not installed...")
     end
   end
 
@@ -56,7 +57,7 @@ class LintInstaller
       end
     rescue
       puts "Python not installed. Please install Python and make sure it is added to your PATH.".red
-      $logger.warn("#{Time.now}: Dependency Error: Python not installed...")
+      $logger.error("Dependency Error: Python not installed...")
     end
   end
 
@@ -68,7 +69,7 @@ class LintInstaller
       end
     rescue
       puts "Python not installed. Please install Python and make sure it is added to your PATH.".red
-      $logger.warn("#{Time.now}: Dependency Error: Python not installed...")
+      $logger.error("Dependency Error: Python not installed...")
     end
   end
 

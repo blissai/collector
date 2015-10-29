@@ -17,11 +17,6 @@ class CollectorTask
 
   def prepare_log(organization, name, lines)
     puts "\tSaving repo data to AWS Bucket...".blue
-    # bucket = s3.bucket('founderbliss-temp-storage')
-    # obj = bucket.object("#{organization}_#{name}_git.log")
-    # string data
-    # obj.put(body: lines, requester_pays: true, acl: 'public-read')
-    # obj.presigned_url(:get, expires_in: 86_400)
     key = "#{organization}_#{name}_git.log"
     object_params = {
       bucket: 'founderbliss-temp-storage',
@@ -34,7 +29,7 @@ class CollectorTask
       $aws_client.put_object(object_params)
     rescue Aws::S3::Errors::InvalidAccessKeyId
       puts "Your AWS Access Key is invalid...".red
-      $logger.error("#{Time.now}: Your AWS Access Key is invalid...")
+      $logger.error("Your AWS Access Key is invalid...")
     end
     key
   end

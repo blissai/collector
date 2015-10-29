@@ -36,10 +36,10 @@ class BlissRunner
     get_or_save_arg('What is the hostname of your Bliss instance?', 'BLISS_HOST')
     get_or_save_arg('What is the name of your organization in git?', 'ORG_NAME')
     File.open("#{File.expand_path('~')}/bliss-config.yml", 'w') { |f| f.write @config.to_yaml } # Store
-    puts 'Collector configured.'
-    puts 'Configuring AWS...'
+    puts 'Collector configured.'.green
+    puts 'Configuring AWS...'.blue
     configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
-    puts 'AWS configured.'
+    puts 'AWS configured.'.green
   end
 
   def choose_command
@@ -64,15 +64,15 @@ class BlissRunner
 
   # A function that automates the above three functions for a scheduled job
   def automate
-    $logger.info("#{Time.now}: Scheduled task has started...")
+    $logger.info(" Scheduled task has started...")
     puts 'Running Collector'
-    $logger.info("#{Time.now}: Running collector...")
+    $logger.info(" Running collector...")
     CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
     puts 'Running Stats'
-    $logger.info("#{Time.now}: Running stats...")
+    $logger.info(" Running stats...")
     StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
     puts 'Running Linter'
-    $logger.info("#{Time.now}: Running linter...")
+    $logger.info(" Running linter...")
     LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
   end
 
@@ -80,19 +80,19 @@ class BlissRunner
   def schedule_job
     puts "How often would you like to automatically run Bliss Collector?".blue
     puts " (1) Every Day\n (2) Every Hour\n (3) Every 10 Minutes"
-    minutes = gets.chomp
-    if ![1, 2, 3].include? minutes.to_i
-      puts 'This is not a option. Please choose 1, 2, 3 or 4.'
+    option = gets.chomp
+    if ![1, 2, 3].include? option.to_i
+      puts 'This is not a valid option. Please choose 1, 2, or 3.'
     else
       if Gem.win_platform?
-
+        task_sched(option)
       else
         cron_job(option)
       end
     end
   end
 
-  def task_sched
+  def task_sched(option)
     # Choose frequency
     if option == 1
       freq = "/SC DAILY"
@@ -132,14 +132,14 @@ class BlissRunner
 
     # Create a file for Cron
     File.open('/etc/cron.d/bliss', 'w') { |file| file.write(cron_entry) }
-    puts 'Job scheduled successfully.'
+    puts 'Job scheduled successfully.'.green
   end
 
   private
   # Checks for saved argument in config file, otherwise prompts user
   def get_or_save_arg(message, env_name)
     if @config && @config[env_name]
-      puts "Loading #{env_name} from bliss-config.yml...".green
+      puts "Loading #{env_name} from bliss-config.yml...".blue
     else
       puts message.blue
       arg = gets.chomp

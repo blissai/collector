@@ -42,7 +42,7 @@ class DependencyInstaller
   end
 
   def run
-    puts 'Installing dependencies...'
+    puts 'Installing dependencies...'.blue
     # Install required languages and package managers
     # install_perl
     # install_npm if ["JavaScript", "nodejs", "node"].any? { |lang| @languages.include? lang }

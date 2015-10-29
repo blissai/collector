@@ -220,6 +220,7 @@ DEPENDENCIES
   pry
   pry-nav
   rubocop
+  ruby-progressbar
   simplecov
 
 BUNDLED WITH
