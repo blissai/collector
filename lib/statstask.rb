@@ -20,8 +20,8 @@ class StatsTask
       name = git_dir.split('/').last
       repo = repos[name]
       repo_key = repo['repo_key']
-      count_response = agent.get("#{host}/api/gitlog/stats_todo_count?repo_key=#{repo_key}", auth_headers)
-      count_json = JSON.parse(count_response.body)
+      count_json = http_get(agent, "#{host}/api/gitlog/stats_todo_count?repo_key=#{repo_key}", auth_headers)
+      break if count_json.nil?
       count = count_json["stats_todo"].to_i
       total_commits_count += count
     end
@@ -35,10 +35,8 @@ class StatsTask
       start_from = repo['start_from']
       json_return = []
       loop do
-        repo_return = agent.get(
-        "#{host}/api/gitlog/stats_todo?repo_key=#{repo_key}",
-        auth_headers)
-        json_return = JSON.parse(repo_return.body)
+        json_return = http_get(agent, "#{host}/api/gitlog/stats_todo?repo_key=#{repo_key}", auth_headers)
+        break if json_return.nil? || json_return.empty?
         puts "Working on: #{name}".green if total_commits_count >= total_commits_done
         $logger.info("Running Stats on #{name}...")
         json_return.each do |metric|
@@ -120,7 +118,6 @@ class StatsTask
           percent_done = ((total_commits_done.to_f / total_commits_count.to_f) * 100).to_i rescue 100
           puts "\n\n Finished #{total_commits_done} of #{total_commits_count} stats tasks (#{percent_done}%) \n\n".green
         end
-        break if json_return.empty?
       end
       # Go back to master at the end
       checkout_commit(git_dir, 'master')
