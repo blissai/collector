@@ -36,10 +36,10 @@ module Common
       puts "Error: Your API key is not valid.".red
       $logger.error("Invalid API Key.")
     rescue Mechanize::ResponseCodeError => re
-      if tries < 3
+      if tried < 3
         puts "Warning: Server in maintenance mode, waiting for 20 seconds and trying again".yellow
         sleep(20)
-        http_get(agent, url, auth, tries + 1)
+        http_get(agent, url, auth, tried + 1)
       else
         puts "Warning: Can't connect to Bliss server... Tried max times.".yellow
         $logger.error("Warning: Can't connect to Bliss server... Tried max times.")
