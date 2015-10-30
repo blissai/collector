@@ -19,7 +19,7 @@ class CollectorTask
 
   def git_log(dir_name, since_param)
     log_fmt = '%H|%P|%ai|%aN|%aE|%s'
-    command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' --since=#{since_param}"
+    command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' #{since_param}"
     cmd = get_cmd(command)
     `#{cmd}`
   end
@@ -106,9 +106,10 @@ class CollectorTask
 
   def get_since_param repo_name
     if (new_repo? repo_name) || (@saved_repos[repo_name]["start_from"].nil?)
-      (DateTime.now - 1.month).strftime("%Y-%m-%d")
+      # "--since=#{(DateTime.now - 1.month).strftime("%Y-%m-%d")}"
+      "-100"
     else
-      @saved_repos[repo_name]["start_from"].strftime("%Y-%m-%d")
+      "--since=#{@saved_repos[repo_name]["start_from"].strftime("%Y-%m-%d")}"
     end
   end
 end
