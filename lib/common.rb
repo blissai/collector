@@ -31,7 +31,7 @@ module Common
     json_return = nil
     begin
       response = agent.get(url, auth)
-      json_return = JSON.parse(count_response.body)
+      json_return = JSON.parse(response.body)
     rescue Mechanize::UnauthorizedError => ue
       puts "Error: Your API key is not valid.".red
       $logger.error("Invalid API Key.")
