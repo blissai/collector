@@ -8,8 +8,8 @@ class BlissRunner
       @config = {}
     end
     FileUtils.mkdir_p "#{File.expand_path('~/collector/logs')}"
-    $logger = Logger.new("#{File.expand_path('~/collector/logs/blisslog.txt')}", 'daily')
     get_config
+    $logger = BlissLogger.new(@config["ORG_NAME"])
     DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
@@ -43,11 +43,12 @@ class BlissRunner
   end
 
   def choose_command
+    # binding.pry
     puts 'Which command would you like to run? ((C)ollector, (S)tats, (L)inter or (Q)uit) or type "T" to setup scheduling.'
     command = gets.chomp.upcase
     if command == 'C'
       puts 'Running Collector'
-      CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
+      CollectorTask.new(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST']).execute
     elsif command == 'L'
       puts 'Running Linter'
       LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
@@ -59,23 +60,23 @@ class BlissRunner
     else
       puts 'Not a valid option. Please choose Collector, Lint, Stats or Quit.' unless command == 'Q'
     end
+    $logger.save_log if command.eql? 'Q'
     choose_command unless command.eql? 'Q'
   end
 
   # A function that automates the above three functions for a scheduled job
   def automate
-    if !File.exists?("#{@config['TOP_LVL_DIR']}/.bliss.json")
     $logger.info(" Scheduled task has started...")
-    puts 'Running Collector'
-      $logger.info(" Running collector...")
-      CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
-    end
+    # puts 'Running Collector'
+    $logger.info(" Running collector...")
+    CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
     puts 'Running Stats'
     $logger.info(" Running stats...")
     StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
     puts 'Running Linter'
     $logger.info(" Running linter...")
     LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
+    $logger.save_log
   end
 
   # A function to set up a scheduled job to run 'automate' every x number of minutes

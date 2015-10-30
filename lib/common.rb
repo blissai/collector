@@ -16,9 +16,9 @@ module Common
     Dir.glob(top_dir_with_star).select { |f| File.directory? f }
   end
 
-  def save_bliss_file(top_dir_name, repos)
+  def save_bliss_file(top_dir_name, data)
     File.open("#{top_dir_name}/.bliss.json", 'w') do |f|
-      f.write(repos.to_json)
+      f.write(data.to_json)
     end
   end
 

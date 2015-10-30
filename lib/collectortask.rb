@@ -3,15 +3,24 @@ class CollectorTask
   include Common
   include Gitbase
 
+  def initialize(top_dir_name, organization, api_key, host)
+    $logger.info("Starting Collector.")
+    @top_dir_name = top_dir_name
+    @organization = organization
+    @api_key = api_key
+    @host = host
+    @saved_repos = read_bliss_file(top_dir_name) rescue {}
+  end
+
   def git_init(git_dir)
     cmd = get_cmd("cd #{git_dir};git init")
     `#{cmd}`
   end
 
-  def git_log(dir_name)
+  def git_log(dir_name, since_param)
     log_fmt = '%H|%P|%ai|%aN|%aE|%s'
-    cmd = get_cmd("cd #{dir_name};git log --all --pretty=format:'#{log_fmt}'")
-    # puts "\tRunning: #{cmd}"
+    command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' --since=#{since_param}"
+    cmd = get_cmd(command)
     `#{cmd}`
   end
 
@@ -34,13 +43,13 @@ class CollectorTask
     key
   end
 
-  def execute(top_dir_name, organization, api_key, host)
+  def execute
     agent = Mechanize.new
     agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    auth_headers = { 'X-User-Token' => api_key }
+    auth_headers = { 'X-User-Token' => @api_key }
     repos = {}
 
-    dir_list = get_directory_list(top_dir_name)
+    dir_list = get_directory_list(@top_dir_name)
     puts "Found #{dir_list.count} repositories...".green
     dir_list.each do |dir_name|
       name = dir_name.split('/').last
@@ -50,7 +59,7 @@ class CollectorTask
       project_types = sense_project_type(dir_name)
       params = {
         name: name,
-        full_name: "#{organization}/#{name}",
+        full_name: "#{@organization}/#{name}",
         git_url: git_base,
         languages: project_types
       }
@@ -59,24 +68,47 @@ class CollectorTask
       puts "\tPulling repository at #{git_base}...".blue
       `#{cmd}`
       puts "\tGetting list of commits for project #{name}...".blue
-      lines = git_log(dir_name)
-      puts "\tFound #{lines.split("\n").count} commits in total.".green
+      $logger.info("Getting gitlog for #{name}")
+      lines = git_log(dir_name, get_since_param(name))
+      commit_count = lines.split("\n").count
+      puts "\tFound #{commit_count} commits in total.".green
       puts "\tSaving repository details to database...".blue
-      repo_return = agent.post("#{host}/api/repo.json", params, auth_headers)
+      repo_return = agent.post("#{@host}/api/repo.json", params, auth_headers)
       repo_details = JSON.parse(repo_return.body)
       puts "\tCreated repo ##{repo_details['id']} - #{repo_details['full_name']}".green
       json_return = JSON.parse(repo_return.body)
       repos[name] = json_return
+      repos[name]["commit_count"] = commit_count
       repo_key = json_return['repo_key']
-
-      s3_object_key = prepare_log(organization, name, lines)
-      agent.post(
-        "#{host}/api/gitlog",
+      if needs_running? @top_dir_name, name, commit_count
+        puts "\tSaving Gitlog to AWS...".blue
+        s3_object_key = prepare_log(@organization, name, lines)
+        agent.post(
+        "#{@host}/api/gitlog",
         { repo_key: repo_key, object_key: s3_object_key },
         auth_headers)
+      else
+        puts "\tNo new commits to process for repo #{name}...".green
+      end
     end
-
-    save_bliss_file(top_dir_name, repos)
+    save_bliss_file(@top_dir_name, repos)
     puts "Collector finished.".green
+    $logger.info("Collector finished...")
+  end
+
+  def needs_running? top_dir_name, repo_name, commit_count
+    (new_repo? repo_name) || (@saved_repos[repo_name]["commit_count"] < commit_count)
+  end
+
+  def new_repo? repo_name
+    !@saved_repos.has_key? repo_name
+  end
+
+  def get_since_param repo_name
+    if (new_repo? repo_name) || (@saved_repos[repo_name]["start_from"].nil?)
+      (DateTime.now - 1.month).strftime("%Y-%m-%d")
+    else
+      @saved_repos[repo_name]["start_from"].strftime("%Y-%m-%d")
+    end
   end
 end

@@ -4,6 +4,7 @@ class StatsTask
   include Gitbase
 
   def execute(top_dir_name, api_key, host)
+    $logger.info("Starting Stats.")
     agent = Mechanize.new
     agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     auth_headers = { 'X-User-Token' => api_key }
@@ -25,7 +26,6 @@ class StatsTask
       total_commits_count += count
     end
 
-
     total_commits_done = 0
 
     dir_list.each do |git_dir|
@@ -40,13 +40,15 @@ class StatsTask
         auth_headers)
         json_return = JSON.parse(repo_return.body)
         puts "Working on: #{name}".green if total_commits_count >= total_commits_done
+        $logger.info("Running Stats on #{name}...")
         json_return.each do |metric|
           commit = metric['commit']
           puts "Getting stats for #{commit}... (#{total_commits_done + 1} / #{total_commits_count})".blue
+          $logger.info("Commit: #{commit}...")
           if start_from.nil?
             start_from = DateTime.now - 1.month
           end
-          stat_command = "git log --pretty=tformat: --numstat --since=#{start_from.strftime("%Y-%m-%d")} #{commit}"
+          stat_command = "git log --pretty=tformat: --numstat #{commit}"
           cmd = get_cmd("cd #{git_dir}; #{stat_command}")
           # puts "\t\t#{cmd}"
           added_lines = 0
@@ -112,6 +114,7 @@ class StatsTask
           auth_headers)
           stats_return = JSON.parse(stats_response.body)
           puts "\tSuccessfully saved stats for commit #{commit}. (#{total_commits_done + 1} / #{total_commits_count})".green
+          $logger.info("Stats saved: #{commit}...")
           # puts "\t\tstats_response: #{stats_response.inspect}"
           total_commits_done += 1
           percent_done = ((total_commits_done.to_f / total_commits_count.to_f) * 100).to_i rescue 100
@@ -124,5 +127,6 @@ class StatsTask
     end
     puts dir_names.join
     puts "Stats finished.".green
+    $logger.info("Stats finished...")
   end
 end

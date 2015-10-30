@@ -4,6 +4,7 @@ class LinterTask
   include Gitbase
 
   def execute(top_dir_name, api_key, host)
+    $logger.info("Starting Linter.")
     agent = Mechanize.new
     agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     auth_headers = { 'X-User-Token' => api_key }
@@ -30,6 +31,7 @@ class LinterTask
     dir_list.each do |git_dir|
       name = git_dir.split('/').last
       puts "Working on: #{name}".green
+      $logger.info("Running Linter on #{name}...")
       repo = repos[name]
       organization = repo['full_name'].split('/').first
       repo_key = repo['repo_key']
@@ -59,12 +61,13 @@ class LinterTask
               cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s)
               cmd = get_cmd("cd #{git_dir};#{cmd}") if cd_first
               puts "\tRunning linter: #{quality_tool}... This may take a while... (#{total_lints_done + 1} / #{total_lints_count})".blue
+              $logger.info("Running #{quality_tool} on #{commit}...")
               begin
                 lint_output = `#{cmd}`
                 if !quality_tool.include? 'cpd'
                   lint_output = File.open(file_name, 'r').read
                 end
-                puts 'Uploading lint results to AWS...'.blue
+                puts "\tUploading lint results to AWS...".blue
                 key = "#{organization}_#{name}_#{commit}_#{quality_tool}.#{ext}"
                 object_params = {
                   bucket: 'founderbliss-temp-storage',
@@ -98,5 +101,6 @@ class LinterTask
       puts dir_names.join
     end
     puts "Linter finished.".green
+    $logger.info("Linter finished...")
   end
 end
