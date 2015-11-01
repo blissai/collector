@@ -44,6 +44,7 @@ class BlissRunner
 
   def choose_command
     # binding.pry
+    ctasks = ConcurrentTasks.new(@config)
     puts 'Which command would you like to run? ((C)ollector, (S)tats, (L)inter or (Q)uit) or type "T" to setup scheduling.'
     command = gets.chomp.upcase
     if command == 'C'
@@ -51,10 +52,11 @@ class BlissRunner
       CollectorTask.new(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST']).execute
     elsif command == 'L'
       puts 'Running Linter'
-      LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
+      # LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
+      ctasks.linter
     elsif command == 'S'
       puts 'Running Stats'
-      StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
+      ctasks.stats
     elsif command == 'T'
       schedule_job
     else

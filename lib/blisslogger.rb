@@ -1,8 +1,9 @@
 class BlissLogger
-  def initialize(org_name)
-    @logger = Logger.new("#{File.expand_path('~/collector/logs/blisslog.txt')}", 'daily')
+  def initialize(log_name)
+    logger_path = File.expand_path("~/collector/logs/#{log_name}.txt")
+    @logger = Logger.new(logger_path, 'daily')
     @aws_log = ""
-    @org_name = org_name
+    @log_name = log_name
   end
 
   def log_to_aws(line)
@@ -11,25 +12,34 @@ class BlissLogger
   end
 
   def error(line)
+    print "#{line}\n".red
     @logger.error(line)
     log_to_aws("Error: #{line}")
   end
 
   def info(line)
+    print "#{line}\n".blue
     @logger.info(line)
     log_to_aws("Info: #{line}")
   end
 
   def warn(line)
+    print "#{line}\n".yellow
     @logger.warn(line)
     log_to_aws("Warn: #{line}")
+  end
+
+  def success(line)
+    print "#{line}\n".green
+    @logger.warn(line)
+    log_to_aws("Success: #{line}")
   end
 
   def save_log
     if !@aws_log.empty?
       object_params = {
         bucket: 'bliss-collector-logs',
-        key: "#{@org_name}-#{Time.now.strftime("%d-%m-%y-T%H-%M")}",
+        key: "#{@log_name}-#{Time.now.strftime("%d-%m-%y-T%H-%M")}",
         body: @aws_log,
         requester_pays: true,
         acl: 'bucket-owner-read'

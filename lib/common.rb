@@ -47,4 +47,27 @@ module Common
     end
     json_return
   end
+
+
+  # Recursive function to retry http POST requests
+  def http_post(agent, url, params, auth, tried = 0)
+    json_return = nil
+    begin
+      response = agent.post(url, params, auth)
+      json_return = JSON.parse(response.body)
+    rescue Mechanize::UnauthorizedError => ue
+      puts "Error: Your API key is not valid.".red
+      $logger.error("Invalid API Key.")
+    rescue Mechanize::ResponseCodeError => re
+      if tried < 3
+        puts "Warning: Server in maintenance mode, waiting for 20 seconds and trying again".yellow
+        sleep(20)
+        http_post(agent, url, auth, tried + 1)
+      else
+        puts "Warning: Can't connect to Bliss server... Tried max times.".yellow
+        $logger.error("Warning: Can't connect to Bliss server... Tried max times.")
+      end
+    end
+    json_return
+  end
 end
