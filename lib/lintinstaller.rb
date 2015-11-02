@@ -62,7 +62,7 @@ class LintInstaller
 
   def c_dependencies
     begin
-      if !`pip freeze`.include? 'lizard' && !`sudo pip freeze`.include? 'lizard'
+      if (!`pip freeze`.include? 'lizard') && (!`sudo pip freeze`.include? 'lizard')
         puts "Installing Lizard...".blue
         `sudo pip install importlib argparse`
         `sudo pip install lizard`
