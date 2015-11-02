@@ -6,7 +6,7 @@ class DependencyInstaller
     @top_lvl_dir = top_lvl_dir
     @dirs_list = get_directory_list(@top_lvl_dir)
     # Determines languages of all the projects
-    @languages = determine_languages(@top_lvl_dir)
+    @languages = determine_languages
 
     # Determines if windows
     @platform = Gem.win_platform? ? 'Windows' : @platform = 'Unix'
@@ -124,12 +124,12 @@ class DependencyInstaller
   end
 
   # Determine languages/frameworks used in the repositories
-  def determine_languages(git_dirs)
+  def determine_languages
     langs = []
     @dirs_list.each do |git_dir|
       project_types = sense_project_type(git_dir)
       langs = (langs << project_types).flatten!
     end
-    langs
+    langs.uniq
   end
 end

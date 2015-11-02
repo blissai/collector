@@ -8,7 +8,7 @@ class LintInstaller
     install_dependencies
   end
 
-  def php_dependecies
+  def php_dependencies
     begin
       `php -v`
       if !File.directory?(File.expand_path("~/phpcs"))
