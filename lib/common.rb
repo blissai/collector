@@ -62,7 +62,7 @@ module Common
       if tried < 3
         puts "Warning: Server in maintenance mode, waiting for 20 seconds and trying again".yellow
         sleep(20)
-        http_post(agent, url, auth, tried + 1)
+        http_post(agent, url, params, auth, tried + 1)
       else
         puts "Warning: Can't connect to Bliss server... Tried max times.".yellow
         $logger.error("Warning: Can't connect to Bliss server... Tried max times.")
