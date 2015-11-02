@@ -7,12 +7,9 @@
 #
 # set :output, "/path/to/my/cron_log.log"
 #
-# every 1.minutes do
-#   command "ruby #{File.join(`pwd`.gsub(/\n/ ,""), "blisscollector.rb --auto")}"
-# end
+every 1.minutes do
+  command "ruby #{File.join(`pwd`.gsub(/\n/ ,""), "blisscollector.rb --auto")}"
+end
 #
-# every 4.days do
-#   runner "AnotherModel.prune_old_records"
-# end
 
 # Learn more: http://github.com/javan/whenever
