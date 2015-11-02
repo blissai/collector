@@ -82,8 +82,8 @@ class StatsTask
         @logger.success("\tSuccessfully saved stats for commit #{commit}. (#{total_commits_done + 1} / #{total_commits_count})")
         # puts "\t\tstats_response: #{stats_response.inspect}"
         total_commits_done += 1
-        percent_done = ((total_commits_done.to_f / total_commits_count.to_f) * 100).to_i rescue 100
-        @logger.success("\n\n Finished #{total_commits_done} of #{total_commits_count} stats tasks (#{percent_done}%) \n\n")
+        percent_done = ((total_commits_done.to_f / total_commits_count.to_f) * 100).round(2) rescue 100
+        @logger.success("\n\n Finished #{total_commits_done} of #{total_commits_count} stats tasks (#{percent_done}%) for #{name.upcase} \n\n")
       end
     end
     # Go back to master at the end

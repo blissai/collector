@@ -23,8 +23,9 @@ class LinterTask
     loop do
       json_return = http_get(agent, "#{host}/api/gitlog/linters_todo?repo_key=#{repo_key}", auth_headers)
       metrics = json_return['metrics']
-      break if metrics.empty?
       linters = json_return['linters']
+      break if metrics.empty?
+      break if linters.empty?
       metrics.each do |metric|
         commit = metric['commit']
         checkout_commit(git_dir, commit)
@@ -69,7 +70,7 @@ class LinterTask
               $logger.info("Dependency Error: #{quality_tool} not installed...")
             end
             total_lints_done += 1
-            percent_done = ((total_lints_done.to_f / total_lints_count.to_f) * 100).to_i rescue 100
+            percent_done = ((total_lints_done.to_f / total_lints_count.to_f) * 100).round(2) rescue 100
             puts "\n\n Finished #{total_lints_done} of #{total_lints_count} lint tasks (#{percent_done}%)\n\n".green
           end
         end
