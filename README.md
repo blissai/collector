@@ -107,7 +107,11 @@ These should be run in the following order:
 
 Collector -> Stats -> Linter
 
-You can also schedule a cron job to run the above tasks at a specified interval, by typing 't'. The intervals that are currently supported are every day, every hour, or every ten minutes.
+Task scheduling (Unix)
+----------------------
+Bliss Collector uses the 'whenever' gem to manage cron scheduling. To set the task to run on a regular basis, open 'config/schedule.rb'. There is an existing task in the file that will run Collector, Stats and Linter in order. Just change the '1.minutes' to whatever interval you wish the job to run at, update your crontab by typing
+`bundle exec whenever --update-crontab`
+into your terminal in the collector directory.
 
 Notes
 -----

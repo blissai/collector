@@ -3,6 +3,7 @@ class DependencyInstaller
   include Common
 
   def initialize(top_lvl_dir)
+    @logger = BlissLogger.new("Dependencies-#{Time.now.strftime("%d-%m-%y-T%H-%M")}")
     @top_lvl_dir = top_lvl_dir
     @dirs_list = get_directory_list(@top_lvl_dir)
     # Determines languages of all the projects
@@ -51,7 +52,8 @@ class DependencyInstaller
     # install_python if ["Python", "python", "django", "Objective-C", "Objective-C++"].any? { |lang| @languages.include? lang }
 
     # Install linters
-    LintInstaller.new(@languages).run
+    LintInstaller.new(@languages, @logger).run
+    @logger.save_log
   end
 
   # Installs the Chocolatey Package Manager

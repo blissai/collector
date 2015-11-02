@@ -4,7 +4,8 @@ class CollectorTask
   include Gitbase
 
   def initialize(top_dir_name, organization, api_key, host)
-    $logger.info("Starting Collector.")
+    @logger = BlissLogger.new("Collector-#{Time.now.strftime("%d-%m-%y-T%H-%M")}-#{organization}")
+    @logger.info("Starting Collector.")
     @top_dir_name = top_dir_name
     @organization = organization
     @api_key = api_key
@@ -38,7 +39,7 @@ class CollectorTask
       $aws_client.put_object(object_params)
     rescue Aws::S3::Errors::InvalidAccessKeyId
       puts "Your AWS Access Key is invalid...".red
-      $logger.error("Your AWS Access Key is invalid...")
+      @logger.error("Your AWS Access Key is invalid...")
     end
     key
   end
@@ -68,7 +69,7 @@ class CollectorTask
       puts "\tPulling repository at #{git_base}...".blue
       `#{cmd}`
       puts "\tGetting list of commits for project #{name}...".blue
-      $logger.info("Getting gitlog for #{name}")
+      @logger.info("Getting gitlog for #{name}")
       lines = git_log(dir_name, get_since_param(name))
       commit_count = lines.split("\n").count
       puts "\tFound #{commit_count} commits in total.".green
@@ -93,7 +94,8 @@ class CollectorTask
     end
     save_bliss_file(@top_dir_name, repos)
     puts "Collector finished.".green
-    $logger.info("Collector finished...")
+    @logger.info("Collector finished...")
+    @logger.save_log
   end
 
   def needs_running? top_dir_name, repo_name, commit_count

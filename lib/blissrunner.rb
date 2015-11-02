@@ -9,7 +9,6 @@ class BlissRunner
     end
     FileUtils.mkdir_p "#{File.expand_path('~/collector/logs')}"
     get_config
-    $logger = BlissLogger.new(@config["ORG_NAME"])
     DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
@@ -52,33 +51,24 @@ class BlissRunner
       CollectorTask.new(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST']).execute
     elsif command == 'L'
       puts 'Running Linter'
-      # LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
       ctasks.linter
     elsif command == 'S'
       puts 'Running Stats'
       ctasks.stats
-    elsif command == 'T'
-      schedule_job
+    # elsif command == 'T'
+    #   schedule_job
     else
       puts 'Not a valid option. Please choose Collector, Lint, Stats or Quit.' unless command == 'Q'
     end
-    $logger.save_log if command.eql? 'Q'
     choose_command unless command.eql? 'Q'
   end
 
   # A function that automates the above three functions for a scheduled job
   def automate
-    $logger.info(" Scheduled task has started...")
-    # puts 'Running Collector'
-    $logger.info(" Running collector...")
-    CollectorTask.new.execute(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST'])
-    puts 'Running Stats'
-    $logger.info(" Running stats...")
-    StatsTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
-    puts 'Running Linter'
-    $logger.info(" Running linter...")
-    LinterTask.new.execute(@config['TOP_LVL_DIR'], @config['API_KEY'], @config['BLISS_HOST'])
-    $logger.save_log
+    CollectorTask.new(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST']).execute
+    ctasks = ConcurrentTasks.new(@config)
+    ctasks.stats
+    ctasks.linter
   end
 
   # A function to set up a scheduled job to run 'automate' every x number of minutes
@@ -123,14 +113,14 @@ class BlissRunner
   def cron_job(option)
     # Create a shell script that runs blissauto
     cwd = `pwd`.gsub(/\n/, "")
-    cron_command = "cd  #{cwd}; ruby blissauto.rb"
+    cron_command = "cd  #{cwd}; ruby blisscollector.rb --auto"
     file_name = "#{cwd}/blisstask.sh"
     File.open(file_name, 'w') { |file| file.write(cron_command) }
     # Format cron entry
     if option == 1
-      cron_entry = "0 23 * * * #{file_name}"
+      cron_entry = "@daily #{file_name}"
     elsif option == 2
-      cron_entry = "0 * * * * #{file_name}"
+      cron_entry = "@hourly #{file_name}"
     else
       cron_entry = "*/10 * * * * #{file_name}"
     end

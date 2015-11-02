@@ -1,6 +1,7 @@
 class LintInstaller
-  def initialize(languages)
-    $logger.info("Installing linters...")
+  def initialize(languages, logger)
+    @logger = logger
+    @logger.info("Installing linters...")
     @languages = languages
   end
 
@@ -12,22 +13,22 @@ class LintInstaller
     begin
       `php -v`
       if !File.directory?(File.expand_path("~/phpcs"))
-        $logger.info("Installing PHP Codesniffer...")
+        @logger.info("Installing PHP Codesniffer...")
         `git clone https://github.com/squizlabs/PHP_CodeSniffer.git #{File.expand_path("~/phpcs")}`
         # install php codesniffer
       end
     rescue Errno::ENOENT
-      $logger.error("Dependency Error: PHP not installed...")
+      @logger.error("Dependency Error: PHP not installed...")
       abort "PHP not installed. Please install PHP and make sure it is added to your PATH".red
     end
   end
 
   def wordpress_dependencies
     # install php codesniffer if not exists
-    php_dependecies
+    php_dependencies
     # install wpcs if not exists
     if !File.directory?(File.expand_path("~/wpcs"))
-      $logger.info("Installing Wordpress Codesniffer...")
+      @logger.info("Installing Wordpress Codesniffer...")
       `git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git #{File.expand_path("~/wpcs")}`
       # point php codesniffer to wpcs
       `#{File.expand_path("~/phpcs/scripts/phpcs")} --config-set installed_paths #{File.expand_path("~/wpcs")}`
@@ -42,7 +43,7 @@ class LintInstaller
         `npm install --save-dev jshint-json`
       end
     rescue Errno::ENOENT
-      $logger.error("Dependency Error: Node not installed...")
+      @logger.error("Dependency Error: Node not installed...")
       abort "Node Package Manager not installed. Please install NodeJS and NPM and make sure it is added to your PATH".red
     end
   end
@@ -50,12 +51,12 @@ class LintInstaller
   def python_dependencies
     begin
       if !`pip freeze`.include?('django') || !`pip freeze`.include?('prospector')
-        $logger.info("Installing Django and Prospector...")
+        @logger.info("Installing Django and Prospector...")
         `sudo pip install django`
         `sudo pip install prospector`
       end
     rescue Errno::ENOENT
-      $logger.error("Dependency Error: Python not installed...")
+      @logger.error("Dependency Error: Python not installed...")
       abort "Python not installed. Please install Python and make sure it is added to your PATH.".red
     end
   end
@@ -68,7 +69,7 @@ class LintInstaller
         `sudo pip install lizard`
       end
     rescue Errno::ENOENT
-      $logger.error("Dependency Error: Python not installed...")
+      @logger.error("Dependency Error: Python not installed...")
       abort "Python not installed. Please install Python and make sure it is added to your PATH.".red
     end
   end
