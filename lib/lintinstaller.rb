@@ -64,7 +64,7 @@ class LintInstaller
     begin
       if !`pip freeze`.include? 'lizard'
         puts "Installing Lizard...".blue
-        `sudo pip install importlib`
+        `sudo pip install importlib argparse`
         `sudo pip install lizard`
       end
     rescue Errno::ENOENT
