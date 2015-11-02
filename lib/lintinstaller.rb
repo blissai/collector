@@ -1,5 +1,4 @@
 class LintInstaller
-
   def initialize(languages)
     $logger.info("Installing linters...")
     @languages = languages

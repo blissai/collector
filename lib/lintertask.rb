@@ -26,10 +26,10 @@ class LinterTask
       break if metrics.empty?
       linters = json_return['linters']
       metrics.each do |metric|
+        commit = metric['commit']
+        checkout_commit(git_dir, commit)
+        remove_open_source_files(git_dir)
         Dir.mktmpdir do |dir_name|
-          commit = metric['commit']
-          checkout_commit(git_dir, commit)
-          remove_open_source_files(git_dir)
           linters.each do |linter|
             ext = linter['output_format']
             cd_first = linter['cd_first']
