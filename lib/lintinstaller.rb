@@ -51,8 +51,8 @@ class LintInstaller
     begin
       if !`pip freeze`.include?('django') || !`pip freeze`.include?('prospector')
         $logger.info("Installing Django and Prospector...")
-        `pip install django`
-        `pip install prospector`
+        `sudo pip install django`
+        `sudo pip install prospector`
       end
     rescue Errno::ENOENT
       $logger.error("Dependency Error: Python not installed...")
@@ -64,7 +64,7 @@ class LintInstaller
     begin
       if !`pip freeze`.include? 'lizard'
         puts "Installing Lizard...".blue
-        `pip install lizard`
+        `sudo pip install lizard`
       end
     rescue Errno::ENOENT
       $logger.error("Dependency Error: Python not installed...")
