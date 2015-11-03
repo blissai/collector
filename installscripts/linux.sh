@@ -46,10 +46,10 @@ then
 fi
 sudo apt-get -y install git php
 fi
-echo "Downloading Ruby 2.x..."
-rvm install 2.2.2
-echo "Setting Ruby version to 2.x..."
-rvm use 2.2.2 --default
+echo "Downloading JRuby 9.0.0.0..."
+rvm install jruby-9.0.0.0
+echo "Setting Ruby version to JRuby-9.0.0.0..."
+rvm use jruby-9.0.0.0 --default
 rvm reload
 git clone https://github.com/founderbliss/collector.git ~/collector
 sudo chmod +x ~/collector/collector.sh

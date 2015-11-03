@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.2.2'
+#ruby=jruby-9.0.0.0
 gem 'mechanize'
 gem 'cached_web'
 gem 'aws-sdk'

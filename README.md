@@ -63,7 +63,7 @@ The easiest way to install Ruby and Ruby DevKit on Windows is by using RailsInst
 This will include Ruby 2, RubyGems and RubyDevKit.
 
 The other dependencies are available using Chocolatey Nuget, a package manager for Windows.
-There is a script called setup.sh1 in the 'installscripts' folder that will manage the installation of Chocolatey Nuget, Perl, Python, NodeJS and NPM.
+There is a script called setup.ps1 in the 'installscripts' folder that will manage the installation of Chocolatey Nuget, Perl, Python, NodeJS and NPM.
 
 In order to run this script, open up a Powershell window, cd into the 'installscripts' directory, and type:
 ````
