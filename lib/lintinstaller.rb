@@ -52,8 +52,8 @@ class LintInstaller
     begin
       if !`pip freeze`.include?('django') || !`pip freeze`.include?('prospector')
         @logger.info("Installing Django and Prospector...")
-        `sudo pip install django`
-        `sudo pip install prospector`
+        `pip install --user django`
+        `pip install --user prospector`
       end
     rescue Errno::ENOENT
       @logger.error("Dependency Error: Python not installed...")
@@ -63,10 +63,10 @@ class LintInstaller
 
   def c_dependencies
     begin
-      if (!`pip freeze`.include? 'lizard') && (!`sudo pip freeze`.include? 'lizard')
+      if (!`pip freeze`.include? 'lizard')
         puts "Installing Lizard...".blue
-        `sudo pip install importlib argparse`
-        `sudo pip install lizard`
+        `pip install --user importlib argparse`
+        `pip install --user lizard`
       end
     rescue Errno::ENOENT
       @logger.error("Dependency Error: Python not installed...")

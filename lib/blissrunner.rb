@@ -66,8 +66,12 @@ class BlissRunner
   # A function that automates the above three functions for a scheduled job
   def automate
     CollectorTask.new(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST']).execute
+    # Sleep to wait for workers to finish
+    sleep(60)
     ctasks = ConcurrentTasks.new(@config)
     ctasks.stats
+    # Sleep to wait for workers to finish
+    sleep(60)
     ctasks.linter
   end
 
