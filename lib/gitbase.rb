@@ -2,11 +2,14 @@ require_relative 'copyright'
 module Gitbase
   def checkout_commit(git_dir, commit)
     throw 'Git directory not found' unless File.exist?(git_dir)
-    cmd = get_cmd("cd #{git_dir};git reset --hard HEAD")
+    # cmd = get_cmd("cd #{git_dir};git reset --hard HEAD")
+    cmd = "cd #{git_dir} && git reset --hard HEAD"
     `#{cmd}`
-    cmd = get_cmd("cd #{git_dir};git clean -f -d")
+    # cmd = get_cmd("cd #{git_dir};git clean -f -d")
+    cmd = "cd #{git_dir} && git clean -f -d"
     `#{cmd}`
-    co_cmd = get_cmd("cd #{git_dir};git checkout #{commit}")
+    # co_cmd = get_cmd("cd #{git_dir};git checkout #{commit}")
+    co_cmd = "cd #{git_dir} && git checkout #{commit}"
     stdin, stdout, stderr = Open3.popen3(co_cmd)
     @ref = nil
     while (err = stderr.gets) do
@@ -14,11 +17,14 @@ module Gitbase
       @ref = err
       if err =~ /Your local changes to the following files would be overwritten by checkout/
         `#{remove_command} #{git_dir}/*`
-        cmd = get_cmd("cd #{git_dir};git checkout #{co_cmd}")
+        # cmd = get_cmd("cd #{git_dir};git checkout #{co_cmd}")
+        cmd = "cd #{git_dir} && git checkout #{commit}"
         `#{cmd}`
-        cmd = get_cmd("cd #{git_dir};git reset --hard HEAD")
+        # cmd = get_cmd("cd #{git_dir};git reset --hard HEAD")
+        cmd = "cd #{git_dir} && git reset --hard HEAD"
         `#{cmd}`
-        cmd = get_cmd("cd #{git_dir};git clean -fdx")
+        # cmd = get_cmd("cd #{git_dir};git clean -fdx")
+        cmd = "cd #{git_dir} && git clean -fdx"
         `#{cmd}`
         @ref = `#{co_cmd}`
         break
@@ -74,7 +80,8 @@ module Gitbase
       #puts cmd
       puts "Removing #{file_name}"
       if File.exist?(file_name)
-        `#{get_cmd(cmd)}`
+        # `#{get_cmd(cmd)}`
+        `#{cmd}`
       end
     end
   end
