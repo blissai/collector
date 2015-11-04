@@ -1,6 +1,6 @@
 # A class to handle config and instantiation of tasks
 class BlissRunner
-  def initialize
+  def initialize(auto = false)
     # Load configuration File if it exists
     if File.exist? "#{File.expand_path('~/bliss-config.yml')}"
       @config = YAML::load_file("#{File.expand_path('~/bliss-config.yml')}")
@@ -8,7 +8,7 @@ class BlissRunner
       @config = {}
     end
     FileUtils.mkdir_p "#{File.expand_path('~/collector/logs')}"
-    get_config
+    get_config if !auto
     DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
@@ -65,14 +65,22 @@ class BlissRunner
 
   # A function that automates the above three functions for a scheduled job
   def automate
-    CollectorTask.new(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST']).execute
-    # Sleep to wait for workers to finish
-    sleep(60)
-    ctasks = ConcurrentTasks.new(@config)
-    ctasks.stats
-    # Sleep to wait for workers to finish
-    sleep(60)
-    ctasks.linter
+    if configured?
+      CollectorTask.new(@config['TOP_LVL_DIR'], @config['ORG_NAME'], @config['API_KEY'], @config['BLISS_HOST']).execute
+      # Sleep to wait for workers to finish
+      sleep(60)
+      ctasks = ConcurrentTasks.new(@config)
+      ctasks.stats
+      # Sleep to wait for workers to finish
+      sleep(60)
+      ctasks.linter
+    else
+      puts "Not all configuration has been provided.".red
+    end
+  end
+
+  def configured?
+    !@config['TOP_LVL_DIR'].empty? && !@config['ORG_NAME'].empty && !@config['API_KEY'].empty? && !@config['BLISS_HOST'].empty?
   end
 
   # A function to set up a scheduled job to run 'automate' every x number of minutes

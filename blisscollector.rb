@@ -7,7 +7,7 @@ include CliTasks
 
 if auto?
   puts "Running scheduled Bliss job..."
-  BlissRunner.new.automate
+  BlissRunner.new(true).automate
 elsif scheduler?
   cwd = `$pwd.Path`.gsub(/\n/, "")
   puts `@powershell schtasks /Create /SC HOURLY /MO 3 /TN BlissCollector /TR "Powershell.exe -ExecutionPolicy ByPass -Command 'jruby #{pwd}/blisscollector.rb auto'"`
