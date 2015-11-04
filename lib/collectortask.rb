@@ -55,6 +55,7 @@ class CollectorTask
     dir_list.each do |dir_name|
       name = dir_name.split('/').last
       puts "Working on: #{name}...".blue
+      binding.pry
       git_base_cmd = get_cmd("cd #{dir_name};git config --get remote.origin.url")
       git_base = `#{git_base_cmd}`.gsub(/\n/, '')
       project_types = sense_project_type(dir_name)
