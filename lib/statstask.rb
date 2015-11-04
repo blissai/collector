@@ -30,7 +30,8 @@ class StatsTask
           start_from = DateTime.now - 1.month
         end
         stat_command = "git log --pretty=tformat: --numstat #{commit}"
-        cmd = get_cmd("cd #{git_dir}; #{stat_command}")
+        # cmd = get_cmd("cd #{git_dir}; #{stat_command}")
+        cmd = "cd #{git_dir} && #{stat_command}"
         # puts "\t\t#{cmd}"
         added_lines = 0
         deleted_lines = 0
