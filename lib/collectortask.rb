@@ -20,10 +20,10 @@ class CollectorTask
   end
 
   def git_log(dir_name, since_param)
-    log_fmt = '%H|%P|%ai|%aN|%aE|%s'
+    log_fmt = '"%H|%P|%ai|%aN|%aE|%s"'
     # command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' #{since_param}"
     # cmd = get_cmd(command)
-    cmd = "cd #{dir_name} && git log --all --pretty=format:'#{log_fmt}' #{since_param}"
+    cmd = "cd #{dir_name} && git log --all --pretty=format:#{log_fmt} #{since_param}"
     binding.pry
     `#{cmd}`
   end
