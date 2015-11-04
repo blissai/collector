@@ -61,11 +61,13 @@ class CollectorTask
       git_base_cmd = "cd #{dir_name} && git config --get remote.origin.url"
       git_base = `#{git_base_cmd}`.gsub(/\n/, '')
       project_types = sense_project_type(dir_name)
+      from_date = DateTime.parse(Time.new.to_s) - 6.months
       params = {
         name: name,
         full_name: "#{@organization}/#{name}",
         git_url: git_base,
-        languages: project_types
+        languages: project_types,
+        start_from: from_date
       }
       checkout_commit(dir_name, 'master')
       # cmd = get_cmd("cd #{dir_name};git pull")
@@ -112,8 +114,8 @@ class CollectorTask
 
   def get_since_param repo_name
     if (new_repo? repo_name) || (@saved_repos[repo_name]["start_from"].nil?)
-      # "--since=#{(DateTime.now - 1.month).strftime("%Y-%m-%d")}"
-      "-100"
+      "--since=#{(DateTime.parse(Time.new.to_s) - 6.months).strftime("%Y-%m-%d")}"
+      # "-100"
     else
       "--since=#{@saved_repos[repo_name]["start_from"].strftime("%Y-%m-%d")}"
     end

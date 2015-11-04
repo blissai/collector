@@ -239,6 +239,7 @@ DEPENDENCIES
   rubocop
   simplecov
   whenever
+  win32console
 
 BUNDLED WITH
    1.10.6
