@@ -24,7 +24,6 @@ class CollectorTask
     # command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' #{since_param}"
     # cmd = get_cmd(command)
     cmd = "cd #{dir_name} && git log --all --pretty=format:#{log_fmt} #{since_param}"
-    binding.pry
     `#{cmd}`
   end
 
