@@ -44,7 +44,7 @@ class BlissRunner
   def choose_command
     # binding.pry
     ctasks = ConcurrentTasks.new(@config)
-    puts 'Which command would you like to run? ((C)ollector, (S)tats, (L)inter or (Q)uit) or type "T" to setup scheduling.'
+    puts 'Which command would you like to run? ((C)ollector, (S)tats, (L)inter or (Q)uit).'
     command = gets.chomp.upcase
     if command == 'C'
       puts 'Running Collector'
