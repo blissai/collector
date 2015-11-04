@@ -73,11 +73,13 @@ Note: You will need to have Java installed in order for JRuby to work in your en
 The other dependencies are available using Chocolatey Nuget, a package manager for Windows.
 There is a script called setup.ps1 in the 'installscripts' folder that will manage the installation of Chocolatey Nuget, Perl, Python, NodeJS and NPM.
 
-In order to run this script, open up a Powershell window, cd into the 'installscripts' directory, and type:
+In order to run this script, open up a Powershell window (as an Administrator), cd into the 'installscripts' directory, and type:
 ````
 powershell.exe setup.ps1
 ````
 This will begin the installation process.
+
+Note: If running scripts is disabled on your machine, make sure to set the  ''-ExecutionPolicy ByPass' option when executing the above command.
 
 Detailed instructions on how to install PHP in Windows can be found here:
 
