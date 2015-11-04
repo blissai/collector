@@ -14,14 +14,16 @@ class CollectorTask
   end
 
   def git_init(git_dir)
-    cmd = get_cmd("cd #{git_dir};git init")
+    # cmd = get_cmd("cd #{git_dir};git init")
+    cmd = "cd #{git_dir} && git init"
     `#{cmd}`
   end
 
   def git_log(dir_name, since_param)
     log_fmt = '%H|%P|%ai|%aN|%aE|%s'
-    command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' #{since_param}"
-    cmd = get_cmd(command)
+    # command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' #{since_param}"
+    # cmd = get_cmd(command)
+    cmd = "cd #{dir_name} && git log --all --pretty=format:'#{log_fmt}' #{since_param}"
     `#{cmd}`
   end
 
@@ -55,8 +57,8 @@ class CollectorTask
     dir_list.each do |dir_name|
       name = dir_name.split('/').last
       puts "Working on: #{name}...".blue
-      binding.pry
-      git_base_cmd = get_cmd("cd #{dir_name};git config --get remote.origin.url")
+      # git_base_cmd = get_cmd("cd #{dir_name};git config --get remote.origin.url")
+      git_base_cmd = "cd #{dir_name} && git config --get remote.origin.url"
       git_base = `#{git_base_cmd}`.gsub(/\n/, '')
       project_types = sense_project_type(dir_name)
       params = {
@@ -66,7 +68,8 @@ class CollectorTask
         languages: project_types
       }
       checkout_commit(dir_name, 'master')
-      cmd = get_cmd("cd #{dir_name};git pull")
+      # cmd = get_cmd("cd #{dir_name};git pull")
+      cmd = "cd #{dir_name} && git pull"
       puts "\tPulling repository at #{git_base}...".blue
       `#{cmd}`
       puts "\tGetting list of commits for project #{name}...".blue
