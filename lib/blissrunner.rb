@@ -75,7 +75,7 @@ class BlissRunner
       sleep(60)
       ctasks.linter
     else
-      puts "Collector has not been configured.".red
+      puts "Collector has not been configured. Cannot run auto-task.".red
     end
   end
 
