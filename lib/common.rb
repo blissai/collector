@@ -2,6 +2,7 @@
 module Common
   def get_cmd(cmd)
     if Gem.win_platform?
+      FileUtils.mkdir_p 'C:/tmp'
       @tmpbatchfile = Tempfile.new(['batch', '.ps1'])
       @tmpbatchfile.write(cmd.gsub(';', "\r\n"))
       @tmpbatchfile.close
