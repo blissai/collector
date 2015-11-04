@@ -31,16 +31,13 @@ class LinterTask
         commit = metric['commit']
         checkout_commit(git_dir, commit)
         remove_open_source_files(git_dir)
-        Dir.mktmpdir do |dir_name|
           linters.each do |linter|
             ext = linter['output_format']
             cd_first = linter['cd_first']
             quality_tool = linter['quality_tool']
             quality_command = linter['quality_command']
-
             proj_filename = nil
-
-            file_name = File.join(dir_name, "#{quality_tool}.#{ext}")
+            file_name = File.join(git_dir, "#{quality_tool}.#{ext}")
             cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s)
             # cmd = get_cmd("cd #{git_dir};#{cmd}") if cd_first
             cmd = "cd #{git_dir} && #{cmd}" if cd_first
@@ -62,8 +59,8 @@ class LinterTask
               }
               $aws_client.put_object(object_params)
               lint_payload = { commit: commit, repo_key: repo_key, linter_id: linter['id'], lint_file_location: key }
-
               lint_response = http_post(agent, "#{host}/api/commit/lint", lint_payload, auth_headers)
+              File.delete(file_name)
             rescue Aws::S3::Errors::InvalidAccessKeyId
               puts "Your AWS Access Key is invalid...".red
               @logger.error("Your AWS Access Key is invalid...")
@@ -75,7 +72,6 @@ class LinterTask
             percent_done = ((total_lints_done.to_f / total_lints_count.to_f) * 100).round(2) rescue 100
             puts "\n\n Finished #{total_lints_done} of #{total_lints_count} lint tasks (#{percent_done}%) for #{name.upcase} \n\n".green
           end
-        end
       end
       # Go back to master at the end
       checkout_commit(git_dir, 'master')
