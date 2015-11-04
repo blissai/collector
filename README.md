@@ -98,7 +98,7 @@ collector
 #### Windows ####
 To run the CLI, navigate to the git directory in a shell, and type:
 `````
-ruby blisscollector.rb
+jruby blisscollector.rb
 `````
 
 #### Configuration ####
@@ -124,6 +124,14 @@ into your terminal from the collector directory.
 To stop scheduled tasks, just type
 `bundle exec whenever -c`
 into your terminal from the collector directory.
+
+Task scheduling (Windows)
+-------------------------
+Windows users can schedule the collector to run every three hours by running the collector with an optional argument:
+
+````````````````````````````````
+jruby blisscollector.rb schedule
+````````````````````````````````
 
 Notes
 -----
