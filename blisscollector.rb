@@ -2,7 +2,6 @@
 $LOAD_PATH << 'lib'
 require_relative 'lib/bootstrap'
 include CliTasks
-binding.pry
 @args = ARGV
 
 if auto?
