@@ -54,13 +54,13 @@ sh setup.sh
 
 You will need to reboot your system after running this script.
 
-Windows
+<!-- Windows
 --------
-<!-- The easiest way to install Ruby and Ruby DevKit on Windows is by using RailsInstaller, which can be found at:
+The easiest way to install Ruby and Ruby DevKit on Windows is by using RailsInstaller, which can be found at:
 
   https://s3.amazonaws.com/railsinstaller/Windows/railsinstaller-3.1.0.exe
 
-This will include Ruby 2, RubyGems and RubyDevKit. -->
+This will include Ruby 2, RubyGems and RubyDevKit.
 
 The easiest way to install JRuby on Windows is by using the installer, which is available here:
 
@@ -87,7 +87,7 @@ http://www.sitepoint.com/how-to-install-php-on-windows/
 
 You can also use Chocolatey to install PHP, however you will need to add 'C:\tools\php' to your path as this is not done automatically. Instructions on altering your path can be found here:
 
-http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-path
+http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-path -->
 
 Usage
 --------
@@ -97,11 +97,11 @@ The install script adds a symlink to the /usr/bin directory. As such, you can ru
 collector
 `````
 
-#### Windows ####
+<!-- #### Windows ####
 To run the CLI, navigate to the git directory in a shell, and type:
 `````
 jruby blisscollector.rb
-`````
+````` -->
 
 #### Configuration ####
 
@@ -127,13 +127,13 @@ To stop scheduled tasks, just type
 `bundle exec whenever -c`
 into your terminal from the collector directory.
 
-Task scheduling (Windows)
+<!-- Task scheduling (Windows)
 -------------------------
 Windows users can schedule the collector to run every three hours by running the collector with an optional argument:
 
 ````````````````````````````````
 jruby blisscollector.rb schedule
-````````````````````````````````
+```````````````````````````````` -->
 
 Notes
 -----
