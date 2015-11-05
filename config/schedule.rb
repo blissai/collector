@@ -8,7 +8,7 @@
 # set :output, "/path/to/my/cron_log.log"
 #
 every 1.minutes do
-  command "cd #{`pwd`.gsub(/\n/ ,"")} && ruby #blisscollector.rb auto"
+  command "cd #{`pwd`.gsub(/\n/ ,"")} && ruby blisscollector.rb auto"
 end
 #
 
