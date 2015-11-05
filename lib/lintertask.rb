@@ -38,7 +38,7 @@ class LinterTask
           proj_filename = nil
 
           file_name = File.join(dir_name, "#{quality_tool}.#{ext}")
-          cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s)
+          cmd = quality_command.gsub('git_dir', git_dir).gsub('file_name', file_name).gsub('proj_filename', proj_filename.to_s).gsub(/~\/phpcs\/scripts\/phpcs/, "#{File.expand_path("~/phpcs/scripts/phpcs")}")
           # cmd = get_cmd("cd #{git_dir};#{cmd}") if cd_first
           cmd = "cd #{git_dir} && #{cmd}" if cd_first
           puts "\tRunning linter: #{quality_tool}... This may take a while... (#{total_lints_done + 1} / #{total_lints_count})".blue

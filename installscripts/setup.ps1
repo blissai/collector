@@ -7,7 +7,7 @@ choco feature enable -n=allowGlobalConfirmation;
 Write-Host "Installing Java...";
 choco install javaruntime
 Write-Host "Installing JRuby...";
-choco install jruby
+choco install jruby -version 9.0.1.0
 Write-Host "Installing Perl...";
 choco install strawberryperl;
 Write-Host "Installing nodeJS...";
