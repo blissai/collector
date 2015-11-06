@@ -35,6 +35,10 @@ In addition, a number of linting tools are required:
 *  Wordpress Codesniffer (for Wordpress repositories)
 *  csslint (for css file linting)
 
+For those with .NET repositories, you will need to manually install InspectCode, which is a code inspection tool for .NET projects. You download it here:
+
+  https://www.jetbrains.com/resharper/features/command-line.html
+
 Unix (CentOS/Ubuntu)
 --------
 There is a shell script in the 'installscripts' that will handle the installation of dependencies.
