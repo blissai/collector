@@ -63,7 +63,7 @@ Windows
 
 There is a script called setup.ps1 in the 'installscripts' folder that will manage the installation of Java, JRuby, Chocolatey Nuget, Perl, Python, NodeJS and NPM.
 
-In order to run this script, open up a Powershell window (as an Administrator), cd into the 'installscripts' directory, and type:
+To run this script, open up a Powershell window (as an Administrator), cd into the 'installscripts' directory, and type:
 ````
 powershell.exe setup.ps1
 ````
