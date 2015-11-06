@@ -48,12 +48,13 @@ class LinterTask
             if !quality_tool.include? 'cpd'
               lint_output = File.open(file_name, 'r').read
             end
+            scrubber = SourceScrubber.new
             puts "\tUploading lint results to AWS...".blue
             key = "#{organization}_#{name}_#{commit}_#{quality_tool}.#{ext}"
             object_params = {
               bucket: 'founderbliss-temp-storage',
               key: key,
-              body: lint_output,
+              body: scrubber.scrub(lint_output),
               requester_pays: true,
               acl: 'bucket-owner-read'
             }
