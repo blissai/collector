@@ -56,22 +56,8 @@ You will need to reboot your system after running this script.
 
 Windows
 --------
-The easiest way to install Ruby and Ruby DevKit on Windows is by using RailsInstaller, which can be found at:
 
-  https://s3.amazonaws.com/railsinstaller/Windows/railsinstaller-3.1.0.exe
-
-This will include Ruby 2, RubyGems and RubyDevKit.
-
-The easiest way to install JRuby on Windows is by using the installer, which is available here:
-
-  http://jruby.org/download
-
-Note: You will need to have Java installed in order for JRuby to work in your environment, available here:
-
-  https://java.com/en/download/
-
-The other dependencies are available using Chocolatey Nuget, a package manager for Windows.
-There is a script called setup.ps1 in the 'installscripts' folder that will manage the installation of Chocolatey Nuget, Perl, Python, NodeJS and NPM.
+There is a script called setup.ps1 in the 'installscripts' folder that will manage the installation of Java, JRuby, Chocolatey Nuget, Perl, Python, NodeJS and NPM.
 
 In order to run this script, open up a Powershell window (as an Administrator), cd into the 'installscripts' directory, and type:
 ````
