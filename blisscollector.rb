@@ -9,7 +9,7 @@ if auto?
   BlissRunner.new(true).automate
 elsif scheduler?
   cwd = `$pwd.Path`.gsub(/\n/, "")
-  puts `@powershell schtasks /Create /SC HOURLY /MO 3 /TN BlissCollector /TR "Powershell.exe -ExecutionPolicy ByPass -Command 'jruby #{pwd}/blisscollector.rb auto'"`
+  puts `@powershell schtasks /Create /SC HOURLY /MO 3 /TN BlissCollector /TR "Powershell.exe -ExecutionPolicy ByPass -Command 'jruby #{cwd}/blisscollector.rb auto'"`
   puts "Task Scheduled to run every 3 hours.".green
 elsif loop?
   # The main program loop to accept commands for various tasks
