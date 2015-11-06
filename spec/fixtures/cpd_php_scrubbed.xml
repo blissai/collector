@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd-cpd>
+   <duplication lines="10" tokens="243">
+      <file line="17" path="/Users/michaelsive/Desktop/Development/blisstestrepos/bliss-php-test/wp-content/plugins/hello.php"/>
+      <file line="30" path="/Users/michaelsive/Desktop/Development/blisstestrepos/bliss-php-test/wp-content/plugins/hello.php"/>
+   </duplication>
+</pmd-cpd>
