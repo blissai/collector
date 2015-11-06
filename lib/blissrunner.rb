@@ -33,7 +33,7 @@ class BlissRunner
     get_or_save_arg('What\'s your AWS Access Key?', 'AWS_ACCESS_KEY_ID')
     get_or_save_arg('What\'s your AWS Access Secret?', 'AWS_SECRET_ACCESS_KEY')
     # get_or_save_arg('What is the hostname of your Bliss instance?', 'BLISS_HOST')
-    @config['BLISS_HOST'] = "https://www.founderbliss.com"
+    set_host
     get_or_save_arg('What is the name of your organization in git?', 'ORG_NAME')
     File.open("#{File.expand_path('~')}/bliss-config.yml", 'w') { |f| f.write @config.to_yaml } # Store
     puts 'Collector configured.'.green
@@ -141,6 +141,10 @@ class BlissRunner
     # Create a file for Cron
     File.open('/etc/cron.d/bliss', 'w') { |file| file.write(cron_entry) }
     puts 'Job scheduled successfully.'.green
+  end
+
+  def set_host
+    @config["BLISS_HOST"] ||= "https://www.founderbliss.com"
   end
 
   private
