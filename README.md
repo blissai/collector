@@ -15,7 +15,7 @@ Setup
 Bliss's Collector has specific requirements that need to be met before it will work on all project types.
 
 The following is a list of dependencies that are required to support:
-*  JRuby 9.x
+*  JRuby 9.0.3.0
 *  Ruby DevKit
 *  Perl
 *  Python
@@ -69,7 +69,7 @@ powershell.exe setup.ps1
 ````
 This will begin the installation process.
 
-Note: If running scripts is disabled on your machine, make sure to set the  ''-ExecutionPolicy ByPass' option when executing the above command.
+Note: If running scripts is disabled on your machine, make sure to set the  '-ExecutionPolicy ByPass' option when executing the above command.
 
 Detailed instructions on how to install PHP in Windows can be found here:
 
