@@ -14,3 +14,4 @@ gem 'win32console', :platforms => :mingw
 gem 'rspec'
 gem 'nokogiri'
 gem 'equivalent-xml'
+gem 'brakeman'
