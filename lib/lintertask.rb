@@ -59,7 +59,7 @@ class LinterTask
               acl: 'bucket-owner-read'
             }
             $aws_client.put_object(object_params)
-            lint_payload = { commit: commit, repo_key: repo_key, linter_id: linter['id'], lint_file_location: key }
+            lint_payload = { commit: commit, repo_key: repo_key, linter_id: linter['id'], lint_file_location: key, git_dir: @dir_name }
 
             lint_response = http_post(agent, "#{host}/api/commit/lint", lint_payload, auth_headers)
           rescue Aws::S3::Errors::InvalidAccessKeyId
