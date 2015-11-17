@@ -79,6 +79,7 @@ class CollectorTask
       lines = git_log(dir_name, get_since_param(name))
       commit_count = lines.split("\n").count
       puts "\tFound #{commit_count} commits in total.".green
+      @logger.info("#{commit_count} commits found...")
       puts "\tSaving repository details to database...".blue
       repo_return = agent.post("#{@host}/api/repo.json", params, auth_headers)
       repo_details = JSON.parse(repo_return.body)
@@ -96,6 +97,7 @@ class CollectorTask
         auth_headers)
       else
         puts "\tNo new commits to process for repo #{name}...".green
+        @logger.info("No new commits...")
       end
     end
     save_bliss_file(@top_dir_name, repos)

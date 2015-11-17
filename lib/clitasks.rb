@@ -3,6 +3,10 @@ module CliTasks
     (@args.size.eql? 1) && (@args[0].eql? "auto")
   end
 
+  def beta?
+    (@args.size.eql? 1) && (@args[0].eql? "beta")
+  end
+
   def scheduler?
     (@args.size.eql? 1) && (@args[0].eql? "schedule") && Gem.win_platform?
   end

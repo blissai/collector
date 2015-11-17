@@ -1,12 +1,13 @@
 # A class to handle config and instantiation of tasks
 class BlissRunner
-  def initialize(auto = false)
+  def initialize(auto = false, beta = false)
     # Load configuration File if it exists
     if File.exist? "#{File.expand_path('~/bliss-config.yml')}"
       @config = YAML::load_file("#{File.expand_path('~/bliss-config.yml')}")
     else
       @config = {}
     end
+    @beta = beta
     FileUtils.mkdir_p "#{File.expand_path('~/collector/logs')}"
     get_config if !auto
     DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
@@ -144,7 +145,25 @@ class BlissRunner
   end
 
   def set_host
-    @config["BLISS_HOST"] ||= "https://app.founderbliss.com"
+    if @beta
+      @config["BLISS_HOST"] = "https://beta.founderbliss.com"
+    else
+      @config["BLISS_HOST"] ||= "https://app.founderbliss.com"
+    end
+  end
+
+  def is_git_dir dir
+    system("cd #{dir} && git rev-parse")
+  end
+
+  def is_valid_arg env, arg
+    if (env.eql? "TOP_LVL_DIR")
+      m = "That is a git directory. Please enter a directory that contains your git repository folders, not the repository folders themselves." if is_git_dir(arg)
+      m = "That is not a valid directory. Please enter a directory that contains your git repository folders."if !File.directory?(arg)
+      return {valid: m.nil?, msg: m}
+    else
+      return {valid: true, msg: nil}
+    end
   end
 
   private
@@ -155,7 +174,12 @@ class BlissRunner
     else
       puts message.blue
       arg = gets.chomp
-      @config[env_name] = arg
+      valid = is_valid_arg(env_name, arg)
+      if !valid[:valid]
+        get_or_save_arg(valid[:msg], env_name)
+      else
+        @config[env_name] = arg
+      end
     end
   end
 end
