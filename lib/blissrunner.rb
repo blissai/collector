@@ -144,7 +144,7 @@ class BlissRunner
   end
 
   def set_host
-    @config["BLISS_HOST"] ||= "https://www.founderbliss.com"
+    @config["BLISS_HOST"] ||= "https://app.founderbliss.com"
   end
 
   private
