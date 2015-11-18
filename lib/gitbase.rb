@@ -127,42 +127,36 @@ module Gitbase
     if Dir.entries(git_dir).find { |e| /\.sln$/ =~ e }
       # language = ".NET"
       languages.push(".NET")
-    end
-    if !Dir.glob(File.join(git_dir, "**/*.rb")).empty?
+    elsif !Dir.glob(File.join(git_dir, "**/*.rb")).empty?
       languages.push("ruby")
       if File.exist?(File.join(git_dir,"config","boot.rb"))
         # language = 'rails'
         languages.push("rails")
       end
-    end
-    if File.exist?(File.join(git_dir,"Podfile")) || !Dir.glob(File.join(git_dir, "**/*.xcodeproj")).empty?
+    elsif File.exist?(File.join(git_dir,"Podfile")) || !Dir.glob(File.join(git_dir, "**/*.xcodeproj")).empty?
       # language = 'ios'
       languages.push("ios")
       languages.push("Objective-C")
-    end
-    if File.exist?(File.join(git_dir, "Godeps"))
+    elsif File.exist?(File.join(git_dir, "Godeps"))
       # language = 'go'
       languages.push("go")
-    end
-    if File.directory?(File.join(git_dir, "wp-content"))
+    elsif File.directory?(File.join(git_dir, "wp-content"))
       # language = 'wordpress'
       languages.push("wordpress")
-    end
-    if !Dir.glob(File.join(git_dir, "**/*.php")).empty?
-      languages.push("php")
+    elsif !Dir.glob(File.join(git_dir, "**/*.php")).empty?
       if File.exist?(File.join(git_dir, "server.php"))
         if file_contains("#{git_dir}/server.php", /package[ ]+Laravel/)
           languages.push("Laravel")
         end
-      end
-      if File.exist?(File.join(git_dir, "index.php"))
+      elsif File.exist?(File.join(git_dir, "index.php"))
         if file_contains("#{git_dir}/index.php", "package Elgg")
           # language = 'elgg'
           languages.push("elgg")
         end
+      else
+        languages.push("php")
       end
-    end
-    if !Dir.glob(File.join(git_dir, "*.py")).empty?
+    elsif !Dir.glob(File.join(git_dir, "*.py")).empty?
       if File.exists?(File.join(git_dir, "manage.py"))
         if file_contains("#{git_dir}/manage.py", "django")
           # language = 'django'
@@ -171,12 +165,10 @@ module Gitbase
       end
       # language = 'Python'
       languages.push("Python")
-    end
-    if File.exist?(File.join(git_dir, "package.json"))
+    elsif File.exist?(File.join(git_dir, "package.json"))
       # language = 'nodejs'
       languages.push("nodejs")
-    end
-    if !Dir.glob(File.join(git_dir, "**/*.java")).empty? || File.exist?(File.join(git_dir, "build.gradle"))
+    elsif !Dir.glob(File.join(git_dir, "**/*.java")).empty? || File.exist?(File.join(git_dir, "build.gradle"))
       # language = 'Java'
       languages.push("Java")
     end
@@ -201,8 +193,7 @@ module Gitbase
         end
       end
       cloc_test_dirs = dirs.join(" ") if dirs.present?
-    end
-    if File.exist?(File.join(git_dir,"Podfile"))
+    elsif File.exist?(File.join(git_dir,"Podfile"))
       dirs = []
       ['test', 'KIFTests'].each do |test_dir|
         if File.directory?(File.join(git_dir, test_dir))
@@ -210,17 +201,13 @@ module Gitbase
         end
       end
       cloc_test_dirs = dirs.join(" ") if dirs.present?
-    end
-    if File.exist?(File.join(git_dir, "Godeps"))
+    elsif File.exist?(File.join(git_dir, "Godeps"))
       cloc_test_dirs = "#{git_dir} --match-f=_test"
-    end
-    if File.directory?(File.join(git_dir, "wp-content"))
+    elsif File.directory?(File.join(git_dir, "wp-content"))
       cloc_test_dirs = "#{git_dir} --match-f=Test.php"
-    end
-    if File.exist?(File.join(git_dir, "index.php"))
+    elsif File.exist?(File.join(git_dir, "index.php"))
       cloc_test_dirs = "#{git_dir} --match-f=Test.php"
-    end
-    if File.exist?(File.join(git_dir, "server.php"))
+    elsif File.exist?(File.join(git_dir, "server.php"))
       if file_contains("#{git_dir}/server.php", /package[ ]+Laravel/)
         cloc_test_dirs = "#{git_dir} --match-f=Test.php"
       end
@@ -232,8 +219,7 @@ module Gitbase
           end
         end
         cloc_test_dirs = dirs.join(" ") if dirs.present?
-    end
-    if File.exist?(File.join(git_dir, "manage.py"))
+    elsif File.exist?(File.join(git_dir, "manage.py"))
       if file_contains("#{git_dir}/manage.py", "django")
         cloc_test_dirs = "#{git_dir} --match-f='test[\s]*.py'"
       end

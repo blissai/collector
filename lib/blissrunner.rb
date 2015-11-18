@@ -158,8 +158,11 @@ class BlissRunner
 
   def is_valid_arg env, arg
     if (env.eql? "TOP_LVL_DIR")
-      m = "That is a git directory. Please enter a directory that contains your git repository folders, not the repository folders themselves." if is_git_dir(arg)
-      m = "That is not a valid directory. Please enter a directory that contains your git repository folders."if !File.directory?(arg)
+      if !File.directory?(arg)
+        m = "That is not a valid directory. Please enter a directory that contains your git repository folders."
+      elsif is_git_dir(arg)
+        m = "That is a git directory. Please enter a directory that contains your git repository folders, not the repository folders themselves."
+      end
       return {valid: m.nil?, msg: m}
     else
       return {valid: true, msg: nil}

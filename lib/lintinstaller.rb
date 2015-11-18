@@ -86,6 +86,10 @@ class LintInstaller
     end
   end
 
+  def perl_dependencies
+    `perl -MCPAN -e 'install Perl::Critic'`
+  end
+
   def install_dependencies
     if @languages.any? { |lang| ["JavaScript", "nodejs", "node"].include? lang }
       js_dependencies
