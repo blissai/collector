@@ -109,6 +109,9 @@ class LintInstaller
     if @languages.any? { |lang| ["rails","ruby"].include? lang }
       ruby_dependencies
     end
+    if @languages.any? { |lang| ["Perl"].include? lang }
+      perl_dependencies
+    end
     cpd_dependencies
   end
 end

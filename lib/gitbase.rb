@@ -166,6 +166,8 @@ module Gitbase
     elsif !Dir.glob(File.join(git_dir, "**/*.java")).empty? || File.exist?(File.join(git_dir, "build.gradle"))
       # language = 'Java'
       languages.push("Java")
+    elsif !Dir.glob(File.join(git_dir, "**/*.pm")).empty?
+      languages.push("Perl")
     end
     languages
   end
