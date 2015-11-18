@@ -144,15 +144,10 @@ module Gitbase
       # language = 'wordpress'
       languages.push("wordpress")
     elsif !Dir.glob(File.join(git_dir, "**/*.php")).empty?
-      if File.exist?(File.join(git_dir, "server.php"))
-        if file_contains("#{git_dir}/server.php", /package[ ]+Laravel/)
-          languages.push("Laravel")
-        end
-      elsif File.exist?(File.join(git_dir, "index.php"))
-        if file_contains("#{git_dir}/index.php", "package Elgg")
-          # language = 'elgg'
-          languages.push("elgg")
-        end
+      if File.exist?(File.join(git_dir, "server.php")) && file_contains("#{git_dir}/server.php", /package[ ]+Laravel/)
+        languages.push("Laravel")
+      elsif File.exist?(File.join(git_dir, "index.php")) && file_contains("#{git_dir}/index.php", "package Elgg")
+        languages.push("elgg")
       else
         languages.push("php")
       end
