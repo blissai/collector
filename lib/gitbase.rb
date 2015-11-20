@@ -39,17 +39,29 @@ module Gitbase
     if Gem.win_platform?
       egrep_cmd = "C:/Program Files (x86)/GnuWin32/bin/egrep.exe"
       if File.exist?(egrep_cmd)
-        open_source_lines = `"#{egrep_cmd}" -i "free software|Hamano|jQuery|BSD|GPL|GNU|MIT|Apache" #{git_dir}/* -R`.encode('UTF-8', :invalid => :replace).split("\n").keep_if do |line|
-          line =~ /License|Copyright/i
+        open_source_lines = `"#{egrep_cmd}" -i "free software|Hamano|jQuery|BSD|GPL|GNU|MIT|Apache" #{git_dir}/* -R`.split("\n").keep_if do |line|
+          begin
+            line.encode('UTF-8', :invalid => :replace) =~ /License|Copyright/i
+          rescue Encoding::UndefinedConversionError => e
+            false
+          end
         end
       else
-        open_source_lines = `findstr /R /S "Hamano jQuery BSD GPL GNU MIT Apache" #{git_dir}/*`.encode('UTF-8', :invalid => :replace).split("\n").keep_if do |line|
-          line =~ /License|Copyright/i
+        open_source_lines = `findstr /R /S "Hamano jQuery BSD GPL GNU MIT Apache" #{git_dir}/*`.split("\n").keep_if do |line|
+          begin
+            line.encode('UTF-8', :invalid => :replace) =~ /License|Copyright/i
+          rescue Encoding::UndefinedConversionError => e
+            false
+          end
         end
       end
     else
-      open_source_lines = `egrep -i "free software|Hamano|jQuery|BSD|GPL|GNU|MIT|Apache" #{git_dir}/* -R`.encode('UTF-8', :invalid => :replace).split("\n").keep_if do |line|
-        line =~ /License|Copyright/i
+      open_source_lines = `egrep -i "free software|Hamano|jQuery|BSD|GPL|GNU|MIT|Apache" #{git_dir}/* -R`.split("\n").keep_if do |line|
+        begin
+          line.encode('UTF-8', :invalid => :replace) =~ /License|Copyright/i
+        rescue Encoding::UndefinedConversionError => e
+          false
+        end
       end
     end
     todo = []
