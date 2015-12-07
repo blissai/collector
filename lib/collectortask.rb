@@ -119,7 +119,7 @@ class CollectorTask
       "--since=#{(DateTime.parse(Time.new.to_s) - 6.months).strftime("%Y-%m-%d")}"
       # "-100"
     else
-      "--since=#{@saved_repos[repo_name]["start_from"].strftime("%Y-%m-%d")}"
+      "--since=#{DateTime.parse(@saved_repos[repo_name]["start_from"]).strftime("%Y-%m-%d")}"
     end
   end
 end

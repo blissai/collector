@@ -53,5 +53,5 @@ rvm use jruby-9.0.3.0 --default
 rvm reload
 git clone https://github.com/founderbliss/collector.git ~/collector
 sudo chmod +x ~/collector/collector.sh
-sudo ln -s  ~/collector/collector.sh /usr/bin/collector
+# sudo ln -s  ~/collector/collector.sh /usr/bin/collector
 echo "Installation complete. Please reboot your system."
