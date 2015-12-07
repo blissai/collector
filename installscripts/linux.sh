@@ -47,7 +47,7 @@ fi
 sudo apt-get -y install git php
 fi
 echo "Downloading JRuby 9.0.3.0..."
-rvm install jruby-9.0.0.0
+rvm install jruby-9.0.3.0
 echo "Setting Ruby version to JRuby-9.0.3.0..."
 rvm use jruby-9.0.3.0 --default
 rvm reload
