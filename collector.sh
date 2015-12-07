@@ -19,9 +19,6 @@ fi
 
 cd ~/collector
 
-if [[ ! -n "$(command -v bundle)" ]]; then
 gem install bundler
-fi
-
 bundle install --quiet
 ruby ~/collector/blisscollector.rb
