@@ -19,11 +19,11 @@ class CollectorTask
     `#{cmd}`
   end
 
-  def git_log(dir_name, since_param)
+  def git_log(dir_name)
     log_fmt = '"%H|%P|%ai|%aN|%aE|%s"'
     # command = "cd #{dir_name};git log --all --pretty=format:'#{log_fmt}' #{since_param}"
     # cmd = get_cmd(command)
-    cmd = "cd #{dir_name} && git log --all --pretty=format:#{log_fmt} #{since_param}"
+    cmd = "cd #{dir_name} && git log --all --pretty=format:#{log_fmt}"
     `#{cmd}`
   end
 
@@ -61,13 +61,13 @@ class CollectorTask
       git_base_cmd = "cd #{dir_name} && git config --get remote.origin.url"
       git_base = `#{git_base_cmd}`.gsub(/\n/, '')
       project_types = sense_project_type(dir_name)
-      from_date = DateTime.parse(Time.new.to_s) - 6.months
+      # Let this happen on the api for now
+      # from_date = DateTime.parse(Time.new.to_s) - 6.months
       params = {
         name: name,
         full_name: "#{@organization}/#{name}",
         git_url: git_base,
-        languages: project_types,
-        start_from: from_date
+        languages: project_types
       }
       checkout_commit(dir_name, 'master')
       # cmd = get_cmd("cd #{dir_name};git pull")
@@ -76,7 +76,8 @@ class CollectorTask
       `#{cmd}`
       puts "\tGetting list of commits for project #{name}...".blue
       @logger.info("Getting gitlog for #{name}")
-      lines = git_log(dir_name, get_since_param(name))
+      # lines = git_log(dir_name, get_since_param(name))
+      lines = git_log(dir_name)
       commit_count = lines.split("\n").count
       puts "\tFound #{commit_count} commits in total.".green
       @logger.info("#{commit_count} commits found...")
