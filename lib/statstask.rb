@@ -17,7 +17,6 @@ class StatsTask
     count = count_json["stats_todo"].to_i
     total_commits_count += count
     total_commits_done = 0
-    start_from = repo['start_from']
     json_return = []
     loop do
       json_return = http_get(agent, "#{host}/api/gitlog/stats_todo?repo_key=#{repo_key}", auth_headers)
@@ -26,9 +25,6 @@ class StatsTask
       json_return.each do |metric|
         commit = metric['commit']
         @logger.info("Getting stats for #{commit}... (#{total_commits_done + 1} / #{total_commits_count})")
-        if start_from.nil?
-          start_from = DateTime.now - 1.month
-        end
         stat_command = "git log --pretty=tformat: --numstat #{commit}"
         # cmd = get_cmd("cd #{git_dir}; #{stat_command}")
         cmd = "cd #{git_dir} && #{stat_command}"
