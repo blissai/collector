@@ -13,6 +13,8 @@ class StatsTask
     # Count number of commits to process in total
     total_commits_count = 0
     repo_key = repo['repo_key']
+    repo_test_files = repo['test_files_match'] || %w(test spec)
+    repo_test_dirs = repo['test_dirs_match'] || %w(test)
     count_json = http_get(agent, "#{host}/api/gitlog/stats_todo_count?repo_key=#{repo_key}", auth_headers)
     count = count_json["stats_todo"].to_i
     total_commits_count += count
@@ -57,7 +59,7 @@ class StatsTask
         cloc = `#{cmd}`
 
         @logger.info("\tCounting lines of test code. This may take a while... (#{total_commits_done + 1} / #{total_commits_count})")
-        cloc_test_dirs = get_test_dirs(git_dir)
+        cloc_test_dirs = get_test_dirs(git_dir, repo_test_files, repo_test_dirs)
         if !cloc_test_dirs.nil?
           cmd = "perl #{cloc_command} #{cloc_test_dirs} #{cloc_options}"
           cloc_tests = `#{cmd}`

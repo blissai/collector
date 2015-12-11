@@ -193,57 +193,9 @@ module Gitbase
     end
   end
 
-  def get_test_dirs(git_dir)
-    cloc_test_dirs = nil
-    if File.exist?(File.join(git_dir,"config","boot.rb"))
-      dirs = []
-      ['test', 'spec'].each do |test_dir|
-        if File.directory?(File.join(git_dir,test_dir))
-          dirs << File.join(git_dir,test_dir)
-        end
-      end
-      cloc_test_dirs = dirs.join(" ") if dirs.present?
-    elsif File.exist?(File.join(git_dir,"Podfile"))
-      dirs = []
-      ['test', 'KIFTests'].each do |test_dir|
-        if File.directory?(File.join(git_dir, test_dir))
-          dirs << File.join(git_dir, test_dir)
-        end
-      end
-      cloc_test_dirs = dirs.join(" ") if dirs.present?
-    elsif File.exist?(File.join(git_dir, "Godeps"))
-      cloc_test_dirs = "#{git_dir} --match-f=_test"
-    elsif File.directory?(File.join(git_dir, "wp-content"))
-      cloc_test_dirs = "#{git_dir} --match-f=Test.php"
-    elsif File.exist?(File.join(git_dir, "index.php"))
-      cloc_test_dirs = "#{git_dir} --match-f=Test.php"
-    elsif File.exist?(File.join(git_dir, "server.php"))
-      if file_contains("#{git_dir}/server.php", /package[ ]+Laravel/)
-        cloc_test_dirs = "#{git_dir} --match-f=Test.php"
-      end
-      elsif File.exist?(File.join(git_dir, "codeception.yml"))
-        dirs = []
-        ['tests'].each do |test_dir|
-          if File.directory?(File.join(git_dir, test_dir))
-            dirs << File.join(git_dir, test_dir)
-          end
-        end
-        cloc_test_dirs = dirs.join(" ") if dirs.present?
-    elsif File.exist?(File.join(git_dir, "manage.py"))
-      if file_contains("#{git_dir}/manage.py", "django")
-        cloc_test_dirs = "#{git_dir} --match-f='test[\s]*.py'"
-      end
-    end
-    if cloc_test_dirs.nil?
-      # Go with some pretty wide defaults for finding tests
-      dirs = []
-      ['test', 'spec'].each do |test_dir|
-        if File.directory?("#{git_dir}/#{test_dir}")
-          dirs << "#{git_dir}/#{test_dir}"
-        end
-      end
-      cloc_test_dirs = dirs.join(" ") if dirs.present?
-    end
-    cloc_test_dirs
+  def get_test_dirs(git_dir, test_files_match, test_dirs_match)
+    regex_files = test_files_match * '|'
+    regex_dirs = test_dirs_match * '|'
+    "#{git_dir} --match-f='#{regex_files}' --match-d='#{regex_dirs}'"
   end
 end

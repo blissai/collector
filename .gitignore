@@ -17,7 +17,7 @@ dev_cmds
 /.bundle
 /vendor/bundle/
 /vendor/ruby/
-
+.rubocop.yml
 # minimal Rails specific artifacts
 db/*.sqlite3
 /db/*.sqlite3-journal
