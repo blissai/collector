@@ -82,7 +82,7 @@ class BlissRunner
   end
 
   def configured?
-    !@config['TOP_LVL_DIR'].empty? && !@config['ORG_NAME'].empty && !@config['API_KEY'].empty? && !@config['BLISS_HOST'].empty?
+    !@config['TOP_LVL_DIR'].empty? && !@config['ORG_NAME'].empty? && !@config['API_KEY'].empty? && !@config['BLISS_HOST'].empty?
   end
 
   # A function to set up a scheduled job to run 'automate' every x number of minutes
