@@ -86,6 +86,13 @@ class LintInstaller
     end
   end
 
+  def objc_dependencies
+    if !File.directory?(File.expand_path("~/ocstyle"))
+      puts "Installing pmd...".green
+      `https://github.com/founderbliss/ocstyle.git #{File.expand_path("~/ocstyle")}`
+    end
+  end
+
   def perl_dependencies
     `perl -MCPAN -e 'install Perl::Critic'`
   end
@@ -111,6 +118,9 @@ class LintInstaller
     end
     if @languages.any? { |lang| ["Perl"].include? lang }
       perl_dependencies
+    end
+    if @languages.any? { |lang| ["Objective-C", "ios"].include? lang }
+      objc_dependencies
     end
     cpd_dependencies
   end
