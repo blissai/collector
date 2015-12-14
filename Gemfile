@@ -13,6 +13,9 @@ gem 'colorize', '~> 0.7.7'
 gem 'whenever'
 gem 'win32console', :platforms => :mingw
 gem 'rspec'
-gem 'nokogiri'
-gem 'equivalent-xml'
 gem 'brakeman'
+
+group :test do
+  gem 'nokogiri'
+  gem 'equivalent-xml'
+end
