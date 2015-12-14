@@ -88,7 +88,7 @@ class LintInstaller
 
   def objc_dependencies
     if !File.directory?(File.expand_path("~/ocstyle"))
-      puts "Installing pmd...".green
+      puts "Installing ocstyle...".green
       `https://github.com/founderbliss/ocstyle.git #{File.expand_path("~/ocstyle")}`
     end
   end
