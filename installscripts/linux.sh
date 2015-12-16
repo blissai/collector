@@ -12,7 +12,7 @@ if [[ ! -n "$(command -v rvm)" ]]
   curl -sSL https://rvm.io/mpapis.asc | gpg --import -
   curl -L get.rvm.io | bash -s stable
   echo "Installing RVM..."
-  source /etc/profile.d/rvm.sh
+  source ~/.rvm/scripts/rvm
   echo "Reloading RVM..."
   rvm reload
   echo "Installing RVM dependencies..."
