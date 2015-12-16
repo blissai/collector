@@ -16,8 +16,8 @@ fi
 if [[ ! -n "$(command -v npm)" ]]
 then
   echo "Node not installed. Installing..."
-  curl -sL https://rpm.nodesource.com/setup | bash -
-  sudo yum -y install nodejs
+  sudo curl --silent --location https://rpm.nodesource.com/setup | bash -
+  sudo yum install -y npm --enablerepo=epel
   sudo yum -y install gcc-c++ make
 fi
 sudo yum install -y git php
