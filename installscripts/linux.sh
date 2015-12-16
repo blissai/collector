@@ -10,12 +10,8 @@ if [[ ! -n "$(command -v rvm)" ]]
   sudo yum install -y bzip2 autoconf automake libtool bison iconv-devel
   echo "Downloading and Installing RVM..."
   curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-  curl -L get.rvm.io | bash -s stable
+  curl -L get.rvm.io | bash -s stable --ruby=jruby-9.0.3.0 --gems=bundler
   source ~/.rvm/scripts/rvm
-  echo "Reloading RVM..."
-  rvm reload
-  echo "Installing RVM dependencies..."
-  rvm requirements run
 fi
 if [[ ! -n "$(command -v npm)" ]]
 then
@@ -30,12 +26,9 @@ then
 if [[ ! -n "$(command -v rvm)" ]]
 then
   echo "RVM not installed. Installing..."
-  sudo apt-add-repository -y ppa:rael-gc/rvm
-  sudo apt-get update
-  sudo apt-get -y install rvm
-  # sudo apt-get -y install gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison iconv-devel
-  rvm reload
-  rvm requirements run
+  echo "Downloading and Installing RVM..."
+  curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+  curl -L get.rvm.io | bash -s stable --ruby=jruby-9.0.3.0 --gems=bundler
 fi
 if [[ ! -n "$(command -v npm)" ]]
 then
@@ -46,11 +39,15 @@ fi
 sudo apt-get -y install git php
 fi
 source ~/.rvm/scripts/rvm
-echo "Downloading JRuby 9.0.3.0..."
-rvm install jruby-9.0.3.0
-echo "Setting Ruby version to JRuby-9.0.3.0..."
-rvm use jruby-9.0.3.0 --default
+echo "Reloading RVM..."
 rvm reload
+echo "Installing RVM dependencies..."
+rvm requirements run
+# echo "Downloading JRuby 9.0.3.0..."
+# rvm install jruby-9.0.3.0
+# echo "Setting Ruby version to JRuby-9.0.3.0..."
+# rvm use jruby-9.0.3.0 --default
+# rvm reload
 
 # sudo ln -s  ~/collector/collector.sh /usr/bin/collector
 echo "Installation complete. Please reboot your system."

@@ -11,7 +11,7 @@ gem 'pry'
 gem 'pry-nav'
 gem 'colorize', '~> 0.7.7'
 gem 'whenever'
-gem 'win32console', :platforms => :mingw
+gem 'win32console', platforms: :mingw
 gem 'rspec'
 gem 'brakeman'
 
