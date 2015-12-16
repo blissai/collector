@@ -69,6 +69,8 @@ There is a shell script in the 'installscripts' that will handle the installatio
 To run this script, open up a terminal window, navigate (cd) into the 'installscripts' directory, and type
 `````
 sh linux.sh
+gem install bundler
+bundle install
 `````
 
 You will need to reboot your system after running this script.
@@ -81,6 +83,8 @@ There is a script called setup.ps1 in the 'installscripts' folder that will mana
 To run this script, open up a Powershell window (as an Administrator), navigate (cd) into the 'installscripts' directory, and type:
 ````
 powershell.exe setup.ps1
+gem install bundler
+bundle install
 ````
 This will begin the installation process.
 
