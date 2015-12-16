@@ -16,9 +16,9 @@ else
   printf "ERROR: An RVM installation was not found.\n"
 
 fi
-
-cd ~/collector
+ABSOLUTE_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+cd $ABSOLUTE_PATH/collector
 
 gem install bundler
 bundle install --quiet
-ruby ~/collector/blisscollector.rb
+ruby $ABSOLUTE_PATH/blisscollector.rb

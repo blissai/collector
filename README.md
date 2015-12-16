@@ -63,31 +63,22 @@ For those with .NET repositories, you will need to manually install InspectCode,
 
   https://www.jetbrains.com/resharper/features/command-line.html
 
-Unix (CentOS/Ubuntu)
+Getting Started With Unix (CentOS/Ubuntu)
 --------
 There is a shell script in the 'installscripts' that will handle the installation of dependencies.
-You can run it by typing the following commands into your terminal:
+To run this script, open up a terminal window, navigate (cd) into the 'installscripts' directory, and type
 `````
-cd installscripts
 sh linux.sh
 `````
-<!-- #### Manual Installation ####
-Unix-based systems usually come with Perl and Python pre-installed. You will still need to install Ruby, PHP and NodeJS/NPM.
-There is a script in the 'installscripts' folder that will manage the installation of Ruby, PHP and NodeJS/NPM.
-In order to run this script, open up a Bash Terminal, cd into the 'installscripts' directory, and type:
-````
-cd installscripts
-sh setup.sh
-```` -->
 
 You will need to reboot your system after running this script.
 
-Windows
+Getting Started With Windows
 --------
 
 There is a script called setup.ps1 in the 'installscripts' folder that will manage the installation of Java, JRuby, Chocolatey Nuget, Perl, Python, NodeJS and NPM.
 
-To run this script, open up a Powershell window (as an Administrator), cd into the 'installscripts' directory, and type:
+To run this script, open up a Powershell window (as an Administrator), navigate (cd) into the 'installscripts' directory, and type:
 ````
 powershell.exe setup.ps1
 ````
@@ -106,13 +97,13 @@ http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-pa
 Usage
 --------
 #### Unix ####
-To run the CLI, navigate to the git directory in a shell, and type:
+To run our Bliss CLI, navigate (cd) to the Collector directory in a shell, and type:
 `````
 ruby blisscollector.rb
 `````
 
 #### Windows ####
-To run the CLI, navigate to the git directory in a shell, and type:
+To run the CLI, navigate (cd) to the Collector directory in a shell, and type:
 `````
 jruby blisscollector.rb
 `````
