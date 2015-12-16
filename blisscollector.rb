@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+puts "Initializing..."
 $LOAD_PATH << 'lib'
 require_relative 'lib/bootstrap'
 include CliTasks
