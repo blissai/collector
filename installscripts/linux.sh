@@ -38,11 +38,6 @@ then
 fi
 sudo apt-get -y install git php
 fi
-source ~/.rvm/scripts/rvm
-echo "Reloading RVM..."
-rvm reload
-echo "Installing RVM dependencies..."
-rvm requirements run
 # echo "Downloading JRuby 9.0.3.0..."
 # rvm install jruby-9.0.3.0
 # echo "Setting Ruby version to JRuby-9.0.3.0..."
