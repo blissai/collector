@@ -5,9 +5,9 @@ then
 if [[ ! -n "$(command -v rvm)" ]]
   then
   echo "RVM not installed. Installing..."
-  yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel
-  yum install -y libyaml-devel libffi-devel openssl-devel make
-  yum install -y bzip2 autoconf automake libtool bison iconv-devel
+  sudo yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel
+  sudo yum install -y libyaml-devel libffi-devel openssl-devel make
+  sudo yum install -y bzip2 autoconf automake libtool bison iconv-devel
   echo "Downloading RVM..."
   curl -sSL https://rvm.io/mpapis.asc | gpg --import -
   curl -L get.rvm.io | bash -s stable
