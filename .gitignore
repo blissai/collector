@@ -90,6 +90,7 @@ dump.rdb
 .ruby-version
 bliss-config.yml
 bliss-installer.exe
+Gemfile.lock
 
 # Ignore log files
 /logs/*
