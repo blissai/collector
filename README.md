@@ -69,8 +69,6 @@ There is a shell script in the 'installscripts' that will handle the installatio
 To run this script, open up a terminal window, navigate (cd) into the 'installscripts' directory, and type
 `````
 sh linux.sh
-gem install bundler
-bundle install
 `````
 
 You will need to reboot your system after running this script.
@@ -83,8 +81,6 @@ There is a script called setup.ps1 in the 'installscripts' folder that will mana
 To run this script, open up a Powershell window (as an Administrator), navigate (cd) into the 'installscripts' directory, and type:
 ````
 powershell.exe setup.ps1
-gem install bundler
-bundle install
 ````
 This will begin the installation process.
 
@@ -97,6 +93,12 @@ http://www.sitepoint.com/how-to-install-php-on-windows/
 You can also use Chocolatey to install PHP, however you will need to add 'C:\tools\php' to your path as this is not done automatically. Instructions on altering your path can be found here:
 
 http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-path
+
+After running this script and rebooting, you will need to navigate (cd) into the Collector directory and type:
+```````````
+gem install bundler
+bundle install
+```````````
 
 Usage
 --------
