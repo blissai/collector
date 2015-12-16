@@ -9,8 +9,11 @@ class BlissRunner
     end
     @beta = beta
     FileUtils.mkdir_p "#{File.expand_path('~/collector/logs')}"
-    configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
-    get_config if !auto
+    if auto
+      configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
+    else
+      get_config
+    end
     DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
   end
 
@@ -41,6 +44,7 @@ class BlissRunner
     set_host
     File.open("#{File.expand_path('~')}/bliss-config.yml", 'w') { |f| f.write @config.to_yaml } # Store
     puts 'Collector configured.'.green
+    configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
   end
 
   def choose_command
