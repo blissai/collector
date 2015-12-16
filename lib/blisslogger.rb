@@ -7,7 +7,7 @@ class BlissLogger
   end
 
   def log_to_aws(line)
-    log_line = "#{Time.now.strftime("%d-%m-%y-T%H-%M")} - #{line}"
+    log_line = "#{Time.now.strftime('%d-%m-%y-T%H-%M')} - #{line}"
     @aws_log += log_line + "\n"
   end
 
@@ -36,10 +36,10 @@ class BlissLogger
   end
 
   def save_log
-    if !@aws_log.empty?
+    unless @aws_log.empty?
       object_params = {
         bucket: 'bliss-collector-logs',
-        key: "#{@log_name}-#{Time.now.strftime("%d-%m-%y-T%H-%M")}",
+        key: "#{@log_name}-#{Time.now.strftime('%d-%m-%y-T%H-%M')}",
         body: @aws_log,
         requester_pays: true,
         acl: 'bucket-owner-read'

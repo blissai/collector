@@ -3,7 +3,7 @@ class BlissRunner
   def initialize(auto = false, beta = false)
     # Load configuration File if it exists
     if File.exist? "#{File.expand_path('~/bliss-config.yml')}"
-      @config = YAML::load_file("#{File.expand_path('~/bliss-config.yml')}")
+      @config = YAML.load_file("#{File.expand_path('~/bliss-config.yml')}")
     else
       @config = {}
     end
@@ -14,16 +14,14 @@ class BlissRunner
     else
       get_config
     end
-    DependencyInstaller.new(@config["TOP_LVL_DIR"]).run
+    DependencyInstaller.new(@config['TOP_LVL_DIR']).run
   end
 
   # Global AWS Configuration
   def configure_aws(key, secret)
     puts 'Configuring AWS...'.blue
     # If Windows, use AWS's bundled ssl cert
-    if Gem.win_platform?
-      Aws.use_bundled_cert!
-    end
+    Aws.use_bundled_cert! if Gem.win_platform?
     # do this once, and all s3 clients will now accept `:requester_pays` to all operations
     Aws::S3::Client.add_plugin(RequesterPays)
     aws_credentials = Aws::Credentials.new(key, secret)
@@ -81,7 +79,7 @@ class BlissRunner
       sleep(60)
       ctasks.linter
     else
-      puts "Collector has not been configured. Cannot run auto-task.".red
+      puts 'Collector has not been configured. Cannot run auto-task.'.red
     end
   end
 
@@ -91,7 +89,7 @@ class BlissRunner
 
   # A function to set up a scheduled job to run 'automate' every x number of minutes
   def schedule_job
-    puts "How often would you like to automatically run Bliss Collector?".blue
+    puts 'How often would you like to automatically run Bliss Collector?'.blue
     puts " (1) Every Day\n (2) Every Hour\n (3) Every 10 Minutes"
     option = gets.chomp
     if ![1, 2, 3].include? option.to_i
@@ -108,15 +106,15 @@ class BlissRunner
   def task_sched(option)
     # Choose frequency
     if option == 1
-      freq = "/SC DAILY"
+      freq = '/SC DAILY'
     elsif option == 2
-      freq = "/SC HOURLY"
+      freq = '/SC HOURLY'
     else
-      freq = "/SC MINUTE /MO 10"
+      freq = '/SC MINUTE /MO 10'
     end
 
     # Get current path
-    cwd = `@powershell $pwd.path`.gsub(/\n/, "")
+    cwd = `@powershell $pwd.path`.gsub(/\n/, '')
     task_cmd = "cd  #{cwd}\nruby blissauto.rb"
 
     # create batch file
@@ -130,7 +128,7 @@ class BlissRunner
 
   def cron_job(option)
     # Create a shell script that runs blissauto
-    cwd = `pwd`.gsub(/\n/, "")
+    cwd = `pwd`.gsub(/\n/, '')
     cron_command = "cd  #{cwd}; ruby blisscollector.rb --auto"
     file_name = "#{cwd}/blisstask.sh"
     File.open(file_name, 'w') { |file| file.write(cron_command) }
@@ -150,30 +148,31 @@ class BlissRunner
 
   def set_host
     if @beta
-      @config["BLISS_HOST"] = "https://beta.founderbliss.com"
+      @config['BLISS_HOST'] = 'https://beta.founderbliss.com'
     else
-      @config["BLISS_HOST"] ||= "https://app.founderbliss.com"
+      @config['BLISS_HOST'] ||= 'https://app.founderbliss.com'
     end
   end
 
-  def is_git_dir dir
+  def is_git_dir(dir)
     system("cd #{dir} && git rev-parse")
   end
 
-  def is_valid_arg env, arg
-    if (env.eql? "TOP_LVL_DIR")
+  def is_valid_arg(env, arg)
+    if env.eql? 'TOP_LVL_DIR'
       if !File.directory?(arg)
-        m = "That is not a valid directory. Please enter a directory that contains your git repository folders."
+        m = 'That is not a valid directory. Please enter a directory that contains your git repository folders.'
       elsif is_git_dir(arg)
-        m = "That is a git directory. Please enter a directory that contains your git repository folders, not the repository folders themselves."
+        m = 'That is a git directory. Please enter a directory that contains your git repository folders, not the repository folders themselves.'
       end
-      return {valid: m.nil?, msg: m}
+      return { valid: m.nil?, msg: m }
     else
-      return {valid: true, msg: nil}
+      return { valid: true, msg: nil }
     end
   end
 
   private
+
   # Checks for saved argument in config file, otherwise prompts user
   def get_or_save_arg(message, env_name)
     if @config && @config[env_name]
