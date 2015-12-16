@@ -73,6 +73,12 @@ sh linux.sh
 
 You will need to reboot your system after running this script.
 
+After running this script and rebooting, you will need to navigate (cd) into the Collector directory and type:
+```````````
+gem install bundler
+bundle install
+```````````
+
 Getting Started With Windows
 --------
 
