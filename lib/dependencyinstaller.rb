@@ -109,8 +109,6 @@ class DependencyInstaller
     end
   end
 
-  #
-
   def command_exists?(command)
     if windows?
       !`#{command}`.nil?

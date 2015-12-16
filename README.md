@@ -82,9 +82,9 @@ http://windowsitpro.com/systems-management/how-can-i-add-new-folder-my-system-pa
 Usage
 --------
 #### Unix ####
-The install script adds a symlink to the /usr/bin directory. As such, you can run the CLI with the following command:
+To run the CLI, navigate to the git directory in a shell, and type:
 `````
-collector
+ruby blisscollector.rb
 `````
 
 #### Windows ####

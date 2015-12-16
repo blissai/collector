@@ -9,6 +9,18 @@ class LintInstaller
     install_dependencies
   end
 
+  def css_dependencies
+    begin
+      if `npm list -g csslint`.include? "empty"
+        puts "Installing csslint...".blue
+        `npm install -g csslint`
+      end
+    rescue Errno::ENOENT
+      @logger.error("Dependency Error: Node not installed...")
+      abort "Node Package Manager not installed. Please install NodeJS and NPM and make sure it is added to your PATH".red
+    end
+  end
+
   def php_dependencies
     begin
       `php -v`
@@ -122,6 +134,7 @@ class LintInstaller
     if @languages.any? { |lang| ["Objective-C", "ios"].include? lang }
       objc_dependencies
     end
+    css_dependencies
     cpd_dependencies
   end
 end
