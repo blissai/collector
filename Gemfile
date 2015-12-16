@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 #ruby=jruby-9.0.3.0
-gem 'io-console'
 gem 'mechanize'
 gem 'cached_web'
 gem 'aws-sdk'
