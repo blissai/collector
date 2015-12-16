@@ -8,10 +8,9 @@ if [[ ! -n "$(command -v rvm)" ]]
   sudo yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel
   sudo yum install -y libyaml-devel libffi-devel openssl-devel make
   sudo yum install -y bzip2 autoconf automake libtool bison iconv-devel
-  echo "Downloading RVM..."
+  echo "Downloading and Installing RVM..."
   curl -sSL https://rvm.io/mpapis.asc | gpg --import -
   curl -L get.rvm.io | bash -s stable
-  echo "Installing RVM..."
   source ~/.rvm/scripts/rvm
   echo "Reloading RVM..."
   rvm reload
@@ -46,6 +45,7 @@ then
 fi
 sudo apt-get -y install git php
 fi
+source ~/.rvm/scripts/rvm
 echo "Downloading JRuby 9.0.3.0..."
 rvm install jruby-9.0.3.0
 echo "Setting Ruby version to JRuby-9.0.3.0..."
