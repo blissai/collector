@@ -10,9 +10,33 @@ You will need the following information before using Bliss's Collector:
 *  Your AWS Key and AWS Secret - These are used to upload linting files to our AWS Buckets
 *  Your git organization name
 
-Setup
+To Clone This Repository
+--------
+Make sure you have Git installed on your machine.
+
+For Ubuntu/Debian machines, execute the following in terminal:
+`````````
+sudo apt-get install git
+`````````
+
+For RPM-based systems such as Yum, execute the following in terminal:
+`````````
+sudo yum install -y git
+`````````
+
+For Windows machines, you will need to download and run the installer at:
+https://git-scm.com/download/win
+
+You can then clone the repository by executing the following in your terminal:
+```````````
+git clone https://github.com/founderbliss/collector.git
+```````````
+
+Dependencies
 --------
 Bliss's Collector has specific requirements that need to be met before it will work on all project types.
+We attempt to install these for you with the installscripts as outlined below, however additional steps
+may be required depending on your specific environment and it's compatibility with our scripts.
 
 The following is a list of dependencies that are required to support:
 *  JRuby 9.0.3.0
