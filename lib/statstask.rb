@@ -60,7 +60,6 @@ class StatsTask
 
         @logger.info("\tCounting lines of test code. This may take a while... (#{total_commits_done + 1} / #{total_commits_count})")
         cloc_test_dirs = get_test_dirs(git_dir, repo_test_files, repo_test_dirs)
-        binding.pry
         if !cloc_test_dirs.empty?
           cmd = "perl #{cloc_command} #{cloc_test_dirs} #{cloc_options}"
           cloc_tests = `#{cmd}`
