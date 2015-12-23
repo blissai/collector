@@ -44,10 +44,8 @@ class LinterTask
           puts "\tRunning linter: #{quality_tool}... This may take a while... (#{total_lints_done + 1} / #{total_lints_count})".blue
           @logger.info("Running #{quality_tool} on #{commit}...")
           begin
-            lint_output = `#{cmd}`
-            if !quality_tool.include? 'cpd'
-              lint_output = File.open(file_name, 'r').read
-            end
+            `#{cmd}`
+            lint_output = File.open(file_name, 'r').read
             scrubber = SourceScrubber.new
             puts "\tUploading lint results to AWS...".blue
             key = "#{organization}_#{name}_#{commit}_#{quality_tool}.#{ext}"
