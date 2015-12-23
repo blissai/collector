@@ -117,11 +117,6 @@ module Gitbase
   end
 
   def cloc_command
-    # if Gem.win_platform?
-    #   "bin\\cloc"
-    # else
-    #   "bin/cloc"
-    # end
     'bin/cloc'
   end
 
