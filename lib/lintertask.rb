@@ -50,10 +50,9 @@ class LinterTask
             puts "\tUploading lint results to AWS...".blue
             key = "#{organization}_#{name}_#{commit}_#{quality_tool}.#{ext}"
             object_params = {
-              bucket: 'founderbliss-temp-storage',
+              bucket: 'bliss-collector-files',
               key: key,
               body: scrubber.scrub(lint_output),
-              requester_pays: true,
               acl: 'bucket-owner-read'
             }
             $aws_client.put_object(object_params)

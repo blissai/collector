@@ -31,10 +31,9 @@ class CollectorTask
     puts "\tSaving repo data to AWS Bucket...".blue
     key = "#{organization}_#{name}_git.log"
     object_params = {
-      bucket: 'founderbliss-temp-storage',
+      bucket: 'bliss-collector-files',
       key: key,
       body: lines,
-      requester_pays: true,
       acl: 'bucket-owner-read'
     }
     begin
