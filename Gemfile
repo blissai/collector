@@ -14,6 +14,7 @@ gem 'whenever'
 gem 'win32console', platforms: :mingw
 gem 'rspec'
 gem 'brakeman'
+gem 'faraday'
 
 group :test do
   gem 'nokogiri'

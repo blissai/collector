@@ -9,25 +9,8 @@ class BlissRunner
     end
     @beta = beta
     FileUtils.mkdir_p "#{File.expand_path('~/collector/logs')}"
-    if auto
-      configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
-    else
-      get_config
-    end
+    get_config unless auto
     DependencyInstaller.new(@config['TOP_LVL_DIR']).run
-  end
-
-  # Global AWS Configuration
-  def configure_aws(key, secret)
-    puts 'Configuring AWS...'.blue
-    # If Windows, use AWS's bundled ssl cert
-    Aws.use_bundled_cert! if Gem.win_platform?
-    # do this once, and all s3 clients will now accept `:requester_pays` to all operations
-    Aws::S3::Client.add_plugin(RequesterPays)
-    # aws_credentials = Aws::Credentials.new(key, secret)
-    # Aws.config.update(region: 'us-east-1', credentials: aws_credentials)
-    $aws_client = Aws::S3::Client.new(region: 'us-east-1')
-    puts 'AWS configured.'.green
   end
 
   # Initialize state from config file or user input
@@ -35,14 +18,10 @@ class BlissRunner
     puts 'Configuring collector...'
     get_or_save_arg('What\'s your Bliss API Key?', 'API_KEY')
     get_or_save_arg('Which directory are your repositories located in?', 'TOP_LVL_DIR')
-    get_or_save_arg('What\'s your AWS Access Key?', 'AWS_ACCESS_KEY_ID')
-    get_or_save_arg('What\'s your AWS Access Secret?', 'AWS_SECRET_ACCESS_KEY')
-    # get_or_save_arg('What is the hostname of your Bliss instance?', 'BLISS_HOST')
     get_or_save_arg('What is the name of your organization in git?', 'ORG_NAME')
     set_host
     File.open("#{File.expand_path('~')}/bliss-config.yml", 'w') { |f| f.write @config.to_yaml } # Store
     puts 'Collector configured.'.green
-    configure_aws(@config['AWS_ACCESS_KEY_ID'], @config['AWS_SECRET_ACCESS_KEY'])
   end
 
   def choose_command

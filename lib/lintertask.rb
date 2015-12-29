@@ -2,6 +2,7 @@
 class LinterTask
   include Common
   include Gitbase
+  include AwsUploader
 
   def execute(git_dir, api_key, host, repo)
     name = git_dir.split('/').last
@@ -49,19 +50,11 @@ class LinterTask
             scrubber = SourceScrubber.new
             puts "\tUploading lint results to AWS...".blue
             key = "#{organization}_#{name}_#{commit}_#{quality_tool}.#{ext}"
-            object_params = {
-              bucket: 'bliss-collector-files',
-              key: key,
-              body: scrubber.scrub(lint_output),
-              acl: 'bucket-owner-read'
-            }
-            $aws_client.put_object(object_params)
-            lint_payload = { commit: commit, repo_key: repo_key, linter_id: linter['id'], lint_file_location: key, git_dir: git_dir }
+            upload_to_aws('bliss-collector-files', key, scrubber.scrub(lint_output))
+
+            lint_payload = { commit: commit, repo_key: repo_key, linter_id: linter['id'], lint_file_location: key, git_dir: git_dir, bucket: 'bliss-collector-files' }
 
             lint_response = http_post(agent, "#{host}/api/commit/lint", lint_payload, auth_headers)
-          rescue Aws::S3::Errors::InvalidAccessKeyId
-            puts "Your AWS Access Key is invalid...".red
-            @logger.error("Your AWS Access Key is invalid...")
           rescue Errno::ENOENT
             puts "#{quality_tool} is not installed. Please refer to the docs at https://github.com/founderbliss/collector to ensure all dependencies are installed.".red
             @logger.info("Dependency Error: #{quality_tool} not installed...")
