@@ -4,7 +4,6 @@ module AwsUploader
       faraday.request :multipart
       faraday.adapter :net_http
     end
-    # payload = { :file => Faraday::UploadIO.new(path, 'text/*') }
     conn.put("/#{key}", content) do |req|
       req.headers['x-amz-acl'] = 'bucket-owner-read'
     end

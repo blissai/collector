@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 #ruby=jruby-9.0.3.0
 gem 'mechanize'
 gem 'cached_web'
-gem 'aws-sdk'
 gem 'metric_fu'
 gem 'rubocop'
 gem 'rubocop-rspec'
