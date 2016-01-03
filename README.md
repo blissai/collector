@@ -7,7 +7,6 @@ Information Required
 You will need the following information before using Bliss's Collector:
 *  Your Bliss API Key - You can find this by logging into bliss.ai, clicking on the Settings wheel, scrolling the the bottom and clicking "Show" on the API Key bar
 *  The path of the directory where all of your repositories are located
-<!-- *  Your AWS Key and AWS Secret - These are used to upload linting files to our AWS Buckets -->
 *  Your git organization name
 
 To Clone This Repository
